@@ -84,7 +84,7 @@ export default function Register() {
     <div className="bg-[#0b0b0e] text-white">
       <div className="mx-auto max-w-6xl px-6 pt-6">
         <Link to="/" className="inline-flex items-center gap-2">
-          <img src="/logo.png" alt="REX Cinemas" className="h-10 w-10" onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')} />
+          <img src="/logo.svg" alt="REX Cinemas" className="h-10 w-10" onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')} />
           <span className="text-2xl font-bold uppercase tracking-[2px] text-white">REX <span className="text-vox-pink">Cinemas</span></span>
         </Link>
       </div>
@@ -114,7 +114,7 @@ export default function Register() {
             {error && <p className="rounded-lg bg-red-500/10 px-4 py-2.5 text-sm font-medium text-red-400 ring-1 ring-red-500/30">{error}</p>}
             {notice && <p className="rounded-lg bg-sky-500/10 px-4 py-2.5 text-sm font-medium text-sky-300 ring-1 ring-sky-500/30">{notice}</p>}
 
-            <div className="flex items-center gap-6" role="radiogroup" aria-label="Title">
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2" role="radiogroup" aria-label="Title">
               {(['Mr', 'Mrs', 'Miss/Ms'] as Title[]).map((opt) => (
                 <label key={opt} className="flex cursor-pointer items-center gap-2 text-[15px] text-white/85">
                   <input
@@ -126,7 +126,7 @@ export default function Register() {
               ))}
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div>
                 <input value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder={t.auth.firstName} autoComplete="given-name" className={field(firstErr)} />
                 {msg(firstErr)}

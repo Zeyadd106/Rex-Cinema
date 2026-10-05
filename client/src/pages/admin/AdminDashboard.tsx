@@ -13,8 +13,8 @@ export default function AdminDashboard() {
     api.get('/admin/stats').then(({ data }) => setStats(data.stats)).catch((e) => setError(apiError(e)));
   }, []);
 
-  if (error) return <p className="text-red-400">{error}</p>;
-  if (!stats) return <p className="text-[#888]">{t.common.loading}</p>;
+  if (error) return <p className="text-red-600">{error}</p>;
+  if (!stats) return <p className="text-slate-500">{t.common.loading}</p>;
 
   const cards = [
     { label: t.admin.totalUsers, value: stats.total_users },
@@ -26,29 +26,29 @@ export default function AdminDashboard() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold">{t.admin.dashboard}</h1>
+      <h1 className="mb-6 text-2xl font-bold text-vox-blue sm:text-3xl">{t.admin.dashboard}</h1>
       <div className="mb-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
         {cards.map((c) => (
-          <div key={c.label} className="rounded-lg border border-[#333] bg-[#1a1a1a] p-5">
-            <p className="text-xs uppercase tracking-wider text-[#999]">{c.label}</p>
-            <p className="mt-1 text-2xl font-bold text-vox-light">{c.value}</p>
+          <div key={c.label} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">{c.label}</p>
+            <p className="mt-1 text-2xl font-bold text-vox-pink">{c.value}</p>
           </div>
         ))}
       </div>
-      <h2 className="mb-3 text-lg font-semibold">{t.admin.recentBookings}</h2>
-      <div className="overflow-x-auto rounded-lg border border-[#333]">
-        <table className="w-full text-start text-sm">
-          <thead className="bg-[#222] text-[#aaa]">
-            <tr><th className="px-4 py-2.5">{t.admin.ref}</th><th className="px-4 py-2.5">{t.admin.user}</th><th className="px-4 py-2.5">{t.admin.movie}</th><th className="px-4 py-2.5">{t.admin.total}</th><th className="px-4 py-2.5">{t.admin.status}</th></tr>
+      <h2 className="mb-3 text-xl font-bold">{t.admin.recentBookings}</h2>
+      <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <table className="w-full min-w-[640px] text-start text-sm">
+          <thead className="bg-slate-50 text-slate-500">
+            <tr><th className="px-4 py-2.5 font-semibold">{t.admin.ref}</th><th className="px-4 py-2.5 font-semibold">{t.admin.user}</th><th className="px-4 py-2.5 font-semibold">{t.admin.movie}</th><th className="px-4 py-2.5 font-semibold">{t.admin.total}</th><th className="px-4 py-2.5 font-semibold">{t.admin.status}</th></tr>
           </thead>
           <tbody>
             {stats.recent_bookings.map((b) => (
-              <tr key={b.id} className="border-t border-[#2a2a2a]">
-                <td className="px-4 py-2.5"><Link to={`/admin/bookings/${b.id}`} className="text-vox-light hover:underline">{b.booking_reference}</Link></td>
-                <td className="px-4 py-2.5">{b.user_name}</td>
-                <td className="px-4 py-2.5">{b.movie_title}</td>
-                <td className="px-4 py-2.5">${Number(b.total_price).toFixed(2)}</td>
-                <td className="px-4 py-2.5">{b.payment_status}</td>
+              <tr key={b.id} className="border-t border-slate-100 transition hover:bg-slate-50">
+                <td className="px-4 py-2.5"><Link to={`/admin/bookings/${b.id}`} className="font-semibold text-vox-pink hover:underline">{b.booking_reference}</Link></td>
+                <td className="px-4 py-2.5 text-slate-700">{b.user_name}</td>
+                <td className="px-4 py-2.5 text-slate-700">{b.movie_title}</td>
+                <td className="px-4 py-2.5 text-slate-700">${Number(b.total_price).toFixed(2)}</td>
+                <td className="px-4 py-2.5 text-slate-700">{b.payment_status}</td>
               </tr>
             ))}
           </tbody>

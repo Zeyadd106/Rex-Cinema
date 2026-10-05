@@ -8,7 +8,7 @@ import { posterSrc } from './Bookings';
 function BookingRow({ b, paid, pending }: { b: Booking; paid: string; pending: string }) {
   const poster = posterSrc(b.poster_path);
   return (
-    <Link to={`/bookings/${b.id}`} className="flex items-center gap-4 rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm transition hover:-translate-y-0.5 hover:border-vox-pink/50 hover:shadow-md">
+    <Link to={`/bookings/${b.id}`} className="flex flex-wrap items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm transition hover:-translate-y-0.5 hover:border-vox-pink/50 hover:shadow-md sm:flex-nowrap sm:gap-4">
       {poster ? (
         <img src={poster} alt={b.movie_title} className="h-16 w-11 shrink-0 rounded-md object-cover" loading="lazy" />
       ) : (
@@ -18,7 +18,7 @@ function BookingRow({ b, paid, pending }: { b: Booking; paid: string; pending: s
       )}
       <div className="min-w-0 flex-1">
         <p className="truncate font-bold text-slate-900">{b.movie_title}</p>
-        <p className="text-xs text-slate-500">{b.show_date} at {b.show_time?.slice(0, 5)} • {b.booking_reference} • ${Number(b.total_price).toFixed(2)}</p>
+        <p className="break-words text-xs text-slate-500">{b.show_date} at {b.show_time?.slice(0, 5)} • {b.booking_reference} • ${Number(b.total_price).toFixed(2)}</p>
       </div>
       <span className={`shrink-0 rounded-full px-3 py-1 text-xs font-bold ring-1 ${b.payment_status === 'paid' ? 'bg-green-100 text-green-700 ring-green-200' : 'bg-amber-100 text-amber-800 ring-amber-200'}`}>
         {b.payment_status === 'paid' ? paid : pending}

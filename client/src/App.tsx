@@ -1,7 +1,9 @@
+import { useCallback, useEffect, useState } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { LangProvider } from './context/LangContext';
 import Layout from './components/Layout';
+import Splash from './components/Splash';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import Home from './pages/Home';
 import Movies from './pages/Movies';
@@ -33,10 +35,36 @@ import AdminCinemas from './pages/admin/AdminCinemas';
 import AdminSettings from './pages/admin/AdminSettings';
 
 export default function App() {
+  const [showSplash, setShowSplash] = useState(true);
+  const [leaving, setLeaving] = useState(false);
+
+  const dismissSplash = useCallback(() => {
+    setLeaving(true);
+    window.setTimeout(() => {
+      setShowSplash(false);
+      document.body.style.overflow = '';
+    }, 450);
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    const t1 = window.setTimeout(() => setLeaving(true), 2150);
+    const t2 = window.setTimeout(() => {
+      setShowSplash(false);
+      document.body.style.overflow = '';
+    }, 2600);
+    return () => {
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
+      document.body.style.overflow = '';
+    };
+  }, []);
+
   return (
     <AuthProvider>
       <LangProvider>
       <BrowserRouter>
+        {showSplash && <Splash leaving={leaving} onSkip={dismissSplash} />}
         <Layout>
           <Routes>
             <Route path="/" element={<Home />} />

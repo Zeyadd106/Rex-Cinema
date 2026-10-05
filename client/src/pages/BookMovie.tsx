@@ -163,7 +163,7 @@ export default function BookMovie() {
   return (
     <div className="bg-white text-slate-900">
     <div className="mx-auto max-w-6xl px-[6%] py-12">
-      <h1 className="mb-1 text-3xl font-bold text-vox-blue">{t.book.title}{movie ? ` — ${movie.title}` : ''}</h1>
+      <h1 className="mb-1 break-words text-2xl font-bold text-vox-blue sm:text-3xl">{t.book.title}{movie ? ` — ${movie.title}` : ''}</h1>
       <p className="mb-8 text-sm text-slate-500">
         ${TICKET_PRICE} {t.book.perSeat}
         {showInfo && ` • ${showInfo.cinema_name} • ${showInfo.hall_name}${showInfo.format !== 'Standard' ? ` (${showInfo.format})` : ''}`}

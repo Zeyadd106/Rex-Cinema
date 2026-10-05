@@ -21,7 +21,7 @@ export default function SeatMap({
   const availCount = seats.filter((s) => s.is_available).length;
 
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-[#0a0e1a] p-6 shadow-[0_24px_60px_rgba(3,7,18,0.55)] ring-1 ring-white/10 sm:p-8">
+    <div className="relative overflow-hidden rounded-2xl bg-[#0a0e1a] p-3 shadow-[0_24px_60px_rgba(3,7,18,0.55)] ring-1 ring-white/10 sm:p-8">
       {/* ambient glow */}
       <div className="pointer-events-none absolute -top-24 left-1/2 h-64 w-[130%] -translate-x-1/2 rounded-[100%] bg-vox-pink/15 blur-3xl" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-vox-blue/[0.07] to-transparent" />
@@ -34,18 +34,18 @@ export default function SeatMap({
       </div>
 
       {/* selected pill */}
-      <div className="flex h-8 items-center justify-center">
+      <div className="flex min-h-8 items-center justify-center px-2">
         {selected.length > 0 && (
-          <p className="rounded-full bg-amber-400/15 px-4 py-1 text-xs font-bold tracking-wide text-amber-300 ring-1 ring-amber-400/40">
+          <p className="max-w-full truncate rounded-full bg-amber-400/15 px-4 py-1 text-xs font-bold tracking-wide text-amber-300 ring-1 ring-amber-400/40">
             {selectedNames}
           </p>
         )}
       </div>
 
       {/* seat rows */}
-      <div className="relative mt-2 space-y-2.5">
+      <div className="relative mt-2 space-y-2.5 overflow-x-auto pb-1">
         {rows.map((row, ri) => (
-          <div key={row} className="seat-row-enter flex items-center justify-center gap-1.5 sm:gap-2" style={{ animationDelay: `${ri * 70}ms` }}>
+          <div key={row} className="seat-row-enter mx-auto flex w-fit min-w-max items-center justify-center gap-1 px-4 sm:gap-2" style={{ animationDelay: `${ri * 70}ms` }}>
             <span className="w-6 shrink-0 text-center font-mono text-xs font-bold text-white/35">{row}</span>
             {seats.filter((s) => s.row === row).map((s) => {
               const isSel = selected.includes(s.id);
@@ -57,7 +57,7 @@ export default function SeatMap({
                   onClick={() => onToggle(s.id)}
                   title={s.seat_number + (s.is_held && !isSel ? ' (held)' : '')}
                   aria-pressed={isSel}
-                  className={`relative h-8 w-8 text-[11px] font-bold transition-all duration-150 sm:h-9 sm:w-9 ${
+                  className={`relative h-7 w-7 text-[10px] font-bold transition-all duration-150 sm:h-9 sm:w-9 sm:text-[11px] ${
                     locked
                       ? 'cursor-not-allowed rounded-md bg-white/[0.06] text-white/20 ring-1 ring-white/10'
                       : isSel

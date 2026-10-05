@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { api, apiError } from '../services/api';
 import { Movie } from '../types';
 import MovieCard, { Poster } from '../components/MovieCard';
+import FormatLogo from '../components/FormatLogo';
 import { FORMATS } from './WaysToWatch';
 import { useLang } from '../context/LangContext';
 
@@ -95,8 +96,8 @@ export default function Home() {
       <HeroCarousel movies={movies} />
 
       <section className="bg-white px-[6%] py-12 text-slate-900">
-        <div className="mx-auto mb-8 flex max-w-7xl items-end justify-between">
-          <h2 className="text-3xl font-bold tracking-wide text-vox-blue">{t.whatsOn}</h2>
+        <div className="mx-auto mb-8 flex max-w-7xl flex-wrap items-end justify-between gap-3">
+          <h2 className="text-2xl font-bold tracking-wide text-vox-blue sm:text-3xl">{t.whatsOn}</h2>
           <Link to="/movies" className="rounded-full border-2 border-vox-pink px-6 py-1.5 text-sm font-semibold text-vox-pink transition hover:bg-vox-pink hover:text-white">{t.homePage.viewAll}</Link>
         </div>
         <div className="mx-auto mb-10 max-w-md">
@@ -115,17 +116,17 @@ export default function Home() {
       </section>
 
       <section className="bg-[#0d0d0d] px-[6%] py-12">
-        <h2 className="mb-8 text-center text-3xl font-bold tracking-wide text-vox-blue">{t.homePage.experiences}</h2>
+        <h2 className="mb-8 text-center text-2xl font-bold tracking-wide text-vox-blue sm:text-3xl">{t.homePage.experiences}</h2>
         <div className="mx-auto grid max-w-7xl gap-5 sm:grid-cols-2 lg:grid-cols-5">
           {formatKeys.map((k) => (
             <Link
               key={k}
               to={`/ways-to-watch/${k}`}
-              className="group flex h-44 flex-col justify-end overflow-hidden rounded-lg border border-[#333] p-4 transition hover:-translate-y-1 hover:border-vox"
+              className="group flex h-44 flex-col justify-end overflow-hidden rounded-lg border border-[#333] p-4 transition hover:-translate-y-1 hover:border-vox-pink hover:shadow-[0_12px_32px_rgba(212,15,125,0.25)]"
               style={{ background: `linear-gradient(160deg, ${FORMATS[k].color}66, #0a0a0a 70%)` }}
             >
-              <span className="text-2xl font-bold uppercase tracking-widest" style={{ color: FORMATS[k].color }}>{FORMATS[k].name}</span>
-              <span className="mt-1 line-clamp-2 text-xs text-[#bbb] group-hover:text-white">{t.ways.formats[k]?.tagline ?? FORMATS[k].tagline}</span>
+              <FormatLogo format={k} className="text-2xl" />
+              <span className="mt-2 line-clamp-2 text-xs text-[#bbb] group-hover:text-white">{t.ways.formats[k]?.tagline ?? FORMATS[k].tagline}</span>
             </Link>
           ))}
         </div>
@@ -133,8 +134,8 @@ export default function Home() {
 
       {comingSoon.length > 0 && (
         <section className="bg-white px-[6%] py-12 text-slate-900">
-          <div className="mx-auto mb-8 flex max-w-7xl items-end justify-between">
-            <h2 className="text-3xl font-bold tracking-wide text-vox-blue">{t.comingSoon}</h2>
+          <div className="mx-auto mb-8 flex max-w-7xl flex-wrap items-end justify-between gap-3">
+            <h2 className="text-2xl font-bold tracking-wide text-vox-blue sm:text-3xl">{t.comingSoon}</h2>
             <Link to="/coming-soon" className="rounded-full border-2 border-vox-pink px-6 py-1.5 text-sm font-semibold text-vox-pink transition hover:bg-vox-pink hover:text-white">{t.homePage.viewAll}</Link>
           </div>
           <div className="mx-auto grid max-w-7xl gap-8 sm:grid-cols-2 lg:grid-cols-4">

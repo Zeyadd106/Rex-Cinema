@@ -76,7 +76,7 @@ export default function Confirmation() {
           </div>
         </div>
 
-        <div className="mt-8 flex justify-center gap-3">
+        <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
           <button onClick={() => window.print()} className="rounded-xl border-2 border-slate-300 bg-white px-8 py-2.5 font-semibold text-slate-700 transition hover:border-vox-pink hover:text-vox-pink">{t.ticket.print}</button>
           <Link to="/bookings" className="rounded-xl bg-gradient-to-b from-vox-pink to-vox-pink-dark px-8 py-2.5 font-semibold text-white shadow-[0_8px_24px_rgba(212,15,125,0.35)] transition hover:-translate-y-px">{t.ticket.myBookings}</Link>
         </div>

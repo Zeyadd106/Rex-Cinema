@@ -118,11 +118,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         {/* ── Utility bar ─────────────────────────────── */}
         <div className="bg-gradient-to-r from-vox-navy via-[#12305c] to-vox-navy text-white">
           <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6">
-            <Link to="/" className="flex items-center gap-2">
-              <img src="/logo.png" alt="REX Cinemas" className="h-9 w-9" onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')} />
-              <span className="text-xl font-bold uppercase tracking-[2px] text-vox-pink">REX Cinemas</span>
+            <Link to="/" className="flex min-w-0 items-center gap-2">
+              <img src="/logo.svg" alt="REX Cinemas" className="h-8 w-8 shrink-0 sm:h-9 sm:w-9" onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')} />
+              <span className="truncate text-base font-bold uppercase tracking-[2px] text-vox-pink sm:text-xl">REX Cinemas</span>
             </Link>
-            <nav className="flex items-center gap-4 text-[13px] font-medium">
+            <nav className="flex shrink-0 items-center gap-1.5 text-[13px] font-medium sm:gap-4">
               <button onClick={() => setSearchOpen((o) => !o)} title={t.search} aria-label={t.search} className="rounded-full p-2 transition hover:bg-white/10 hover:text-vox-pink focus:outline-none focus-visible:ring-2 focus-visible:ring-vox-pink">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><circle cx="11" cy="11" r="7" /><line x1="16.5" y1="16.5" x2="21" y2="21" /></svg>
               </button>
@@ -151,8 +151,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 </div>
               ) : (
                 <>
-                  <Link to="/login" className="rounded-full px-3 py-1.5 transition hover:bg-white/10 hover:text-vox-pink">{t.login}</Link>
-                  <Link to="/register" className="hidden rounded-full bg-gradient-to-b from-vox-pink to-vox-pink-dark px-5 py-1.5 font-semibold text-white shadow-[0_4px_14px_rgba(212,15,125,0.45)] transition hover:-translate-y-px hover:shadow-[0_6px_20px_rgba(212,15,125,0.55)] sm:inline">{t.signUp}</Link>
+                  <Link to="/login" className="whitespace-nowrap rounded-full px-2 py-1.5 transition hover:bg-white/10 hover:text-vox-pink sm:px-3">{t.login}</Link>
+                  <Link to="/register" className="hidden whitespace-nowrap rounded-full bg-gradient-to-b from-vox-pink to-vox-pink-dark px-5 py-1.5 font-semibold text-white shadow-[0_4px_14px_rgba(212,15,125,0.45)] transition hover:-translate-y-px hover:shadow-[0_6px_20px_rgba(212,15,125,0.55)] sm:inline">{t.signUp}</Link>
                 </>
               )}
               <span className="hidden items-center gap-1.5 rounded-full bg-white/5 px-2.5 py-1 ring-1 ring-white/10 md:flex" title={t.egypt}>
@@ -239,20 +239,54 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className="mx-auto grid max-w-7xl gap-10 px-[6%] py-12 md:grid-cols-2 lg:grid-cols-4">
           <div>
             <Link to="/" className="flex items-center gap-2">
-              <img src="/logo.png" alt="REX Cinemas" className="h-8 w-8" onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')} />
+              <img src="/logo.svg" alt="REX Cinemas" className="h-8 w-8" onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')} />
               <span className="text-lg font-bold uppercase tracking-[2px] text-vox-pink">REX Cinemas</span>
             </Link>
             <h3 className="mb-3 mt-6 text-xs font-semibold uppercase tracking-widest text-slate-400">{t.footer.stay}</h3>
             <div className="flex gap-2">
               {[
-                { label: 'Facebook', href: 'https://www.facebook.com', glyph: 'f' },
-                { label: 'Instagram', href: 'https://www.instagram.com', glyph: '◉' },
-                { label: 'YouTube', href: 'https://www.youtube.com', glyph: '▶' },
-                { label: 'X', href: 'https://x.com', glyph: '𝕏' },
-              ].map((s) => (
-                <a key={s.label} href={s.href} target="_blank" rel="noreferrer" title={`Follow us on ${s.label}`}
-                  className="flex h-9 w-9 items-center justify-center rounded-full bg-vox-ink text-sm text-[#ededed] transition hover:bg-vox-pink hover:text-white">
-                  {s.glyph}
+                {
+                  label: 'Facebook',
+                  href: 'https://www.facebook.com',
+                  Icon: (p: { className?: string }) => (
+                    <svg viewBox="0 0 24 24" fill="currentColor" className={p.className} aria-hidden="true">
+                      <path d="M13.5 21v-7h2.4l.4-3h-2.8V9.1c0-.9.3-1.5 1.6-1.5h1.3V4.9c-.3 0-1.1-.1-2-.1-2 0-3.4 1.2-3.4 3.5V11H8.5v3H11v7h2.5z" />
+                    </svg>
+                  ),
+                },
+                {
+                  label: 'Instagram',
+                  href: 'https://www.instagram.com',
+                  Icon: (p: { className?: string }) => (
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={p.className} aria-hidden="true">
+                      <rect x="3.5" y="3.5" width="17" height="17" rx="5" />
+                      <circle cx="12" cy="12" r="3.8" />
+                      <circle cx="17" cy="7" r="1.2" fill="currentColor" stroke="none" />
+                    </svg>
+                  ),
+                },
+                {
+                  label: 'YouTube',
+                  href: 'https://www.youtube.com',
+                  Icon: (p: { className?: string }) => (
+                    <svg viewBox="0 0 24 24" fill="currentColor" className={p.className} aria-hidden="true">
+                      <path d="M21.6 7.2c-.2-1-1-1.8-2-2C17.9 4.8 12 4.8 12 4.8s-5.9 0-7.6.4c-1 .2-1.8 1-2 2C2 8.9 2 12 2 12s0 3.1.4 4.8c.2 1 1 1.8 2 2 1.7.4 7.6.4 7.6.4s5.9 0 7.6-.4c1-.2 1.8-1 2-2 .4-1.7.4-4.8.4-4.8s0-3.1-.4-4.8zM10 15.2V8.8L15.5 12 10 15.2z" />
+                    </svg>
+                  ),
+                },
+                {
+                  label: 'TikTok',
+                  href: 'https://www.tiktok.com',
+                  Icon: (p: { className?: string }) => (
+                    <svg viewBox="0 0 24 24" fill="currentColor" className={p.className} aria-hidden="true">
+                      <path d="M16.6 3c.4 2.1 1.9 3.6 4.4 3.8v3c-1.7 0-3.2-.5-4.4-1.4v6.3c0 3.4-2.6 6.1-6 6.1-3.3 0-6-2.7-6-6.1s2.7-6 6-6c.3 0 .7 0 1 .1v3.1c-.3-.1-.7-.2-1-.2-1.6 0-2.9 1.3-2.9 2.9s1.3 3 2.9 3c1.7 0 3-1.3 3-3V3h3z" />
+                    </svg>
+                  ),
+                },
+              ].map(({ label, href, Icon }) => (
+                <a key={label} href={href} target="_blank" rel="noreferrer" title={`Follow us on ${label}`} aria-label={`Follow us on ${label}`}
+                  className="flex h-9 w-9 items-center justify-center rounded-full bg-vox-ink text-[#ededed] transition hover:-translate-y-0.5 hover:bg-vox-pink hover:text-white hover:shadow-[0_6px_16px_rgba(212,15,125,0.4)]">
+                  <Icon className="h-[18px] w-[18px]" />
                 </a>
               ))}
             </div>

@@ -71,7 +71,7 @@ export default function Bookings() {
   return (
     <div className="bg-white text-slate-900">
       <div className="mx-auto max-w-5xl px-[6%] py-12">
-        <h1 className="mb-6 text-3xl font-bold text-vox-blue">{t.bookingsPage.title}</h1>
+        <h1 className="mb-6 text-2xl font-bold text-vox-blue sm:text-3xl">{t.bookingsPage.title}</h1>
         {msg && <p className="mb-4 rounded-lg bg-slate-100 px-4 py-3 text-sm font-medium text-slate-700 ring-1 ring-slate-200">{msg}</p>}
         {error && <p className="mb-4 text-red-600">{error}</p>}
 
@@ -109,11 +109,11 @@ export default function Bookings() {
                     <StatusPill booking={b} paid={t.bookingsPage.statusPaid} pending={t.bookingsPage.statusPending} cancelled={t.bookingsPage.statusCancelled} />
                     {b.checked_in_at && <span className="text-xs font-semibold text-green-600">{t.bookingsPage.checkedIn}</span>}
                   </div>
-                  <p className="mt-1 text-xs text-slate-500">
+                  <p className="mt-1 break-words text-xs text-slate-500">
                     {b.cinema_name ? `${b.cinema_name} • ` : ''}{b.show_date ? fmtDay(b.show_date, lang) : ''} • {b.show_time?.slice(0, 5)} • {b.booking_reference} • <b className="text-slate-800">${Number(b.total_price).toFixed(2)}</b>
                   </p>
                 </div>
-                <div className="flex shrink-0 gap-2">
+                <div className="flex shrink-0 flex-wrap gap-2">
                   {b.payment_status !== 'paid' && b.status === 'pending' && (
                     <Link to={`/pay/${b.id}`} className="rounded-lg bg-vox-pink px-5 py-2 text-sm font-bold text-white transition hover:bg-vox-pink-dark">{t.bookingsPage.pay}</Link>
                   )}

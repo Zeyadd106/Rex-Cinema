@@ -66,16 +66,16 @@ export default function Payment() {
   return (
     <div className="bg-slate-50 text-slate-900">
       <div className="mx-auto max-w-5xl px-[6%] py-12">
-        <h1 className="text-3xl font-bold text-vox-blue">{t.payment.title}</h1>
+        <h1 className="text-2xl font-bold text-vox-blue sm:text-3xl">{t.payment.title}</h1>
         <p className="mb-6 mt-1 text-sm text-slate-500">{t.book.summary} • {booking?.movie_title ?? ''}</p>
 
         {/* stepper */}
-        <ol className="mb-8 flex items-center gap-2 text-xs font-bold uppercase tracking-wider">
-          <li className="flex items-center gap-2 text-green-600"><span className="flex h-6 w-6 items-center justify-center rounded-full bg-green-600 text-[11px] text-white">✓</span> Seats</li>
-          <li className="h-px w-8 bg-slate-300 sm:w-16" />
-          <li className="flex items-center gap-2 text-vox-pink"><span className="flex h-6 w-6 items-center justify-center rounded-full bg-vox-pink text-[11px] text-white">2</span> {t.payment.title}</li>
-          <li className="h-px w-8 bg-slate-300 sm:w-16" />
-          <li className="flex items-center gap-2 text-slate-400"><span className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-200 text-[11px]">3</span> E-Ticket</li>
+        <ol className="mb-8 flex flex-wrap items-center gap-2 text-xs font-bold uppercase tracking-wider">
+          <li className="flex items-center gap-2 text-green-600"><span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-green-600 text-[11px] text-white">✓</span> <span className="hidden sm:inline">Seats</span></li>
+          <li className="h-px w-5 bg-slate-300 sm:w-16" />
+          <li className="flex items-center gap-2 text-vox-pink"><span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-vox-pink text-[11px] text-white">2</span> <span className="hidden sm:inline">{t.payment.title}</span></li>
+          <li className="h-px w-5 bg-slate-300 sm:w-16" />
+          <li className="flex items-center gap-2 text-slate-400"><span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-200 text-[11px]">3</span> <span className="hidden sm:inline">E-Ticket</span></li>
         </ol>
 
         {error && <p className="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm font-medium text-red-700 ring-1 ring-red-200">{error}</p>}
@@ -113,7 +113,7 @@ export default function Payment() {
                       <span className="text-[11px] font-semibold uppercase tracking-widest text-white/40">Card</span>
                     )}
                   </div>
-                  <p className="mt-4 font-mono text-lg tracking-[2px] sm:text-xl">
+                  <p className="mt-4 break-all font-mono text-base tracking-[2px] sm:text-xl">
                     {(cardNumber || '•••• •••• •••• ••••').padEnd(19, '•')}
                   </p>
                   <div className="mt-4 flex items-end justify-between text-xs">

@@ -96,8 +96,8 @@ export default function MovieDetail() {
       <div className="bg-black text-white">
       <div className="mx-auto max-w-6xl px-[6%] py-10">
       {/* ── Title + classification + share ── */}
-      <h1 className="text-4xl font-bold">{movie.title}</h1>
-      <div className="mt-2 flex items-center gap-3">
+      <h1 className="break-words text-2xl font-bold sm:text-4xl">{movie.title}</h1>
+      <div className="mt-2 flex flex-wrap items-center gap-3">
         <span className="rounded bg-vox px-2.5 py-0.5 text-sm font-bold">{movie.rating}</span>
         <span className="text-sm text-[#888]">{movie.genre} • {movie.duration} • {language}</span>
         <span className="ms-auto flex items-center gap-2">

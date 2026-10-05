@@ -42,24 +42,24 @@ export default function AdminUsers() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold">{t.admin.users}</h1>
-      {msg && <p className="mb-4 rounded border border-[#444] bg-[#222] px-4 py-2 text-sm">{msg}</p>}
-      {error && <p className="text-red-400">{error}</p>}
-      <div className="overflow-x-auto rounded-lg border border-[#333]">
-        <table className="w-full text-start text-sm">
-          <thead className="bg-[#222] text-[#aaa]">
-            <tr><th className="px-4 py-2.5">{t.admin.name}</th><th className="px-4 py-2.5">{t.admin.email}</th><th className="px-4 py-2.5">{t.admin.adminCol}</th><th className="px-4 py-2.5">{t.admin.bookingsCol}</th><th className="px-4 py-2.5">{t.common.actions}</th></tr>
+      <h1 className="mb-6 text-2xl font-bold text-vox-blue sm:text-3xl">{t.admin.users}</h1>
+      {msg && <p className="mb-4 rounded-lg bg-slate-100 px-4 py-2.5 text-sm font-medium text-slate-700 ring-1 ring-slate-200">{msg}</p>}
+      {error && <p className="text-red-600">{error}</p>}
+      <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <table className="w-full min-w-[640px] text-start text-sm">
+          <thead className="bg-slate-50 text-slate-500">
+            <tr><th className="px-4 py-2.5 font-semibold">{t.admin.name}</th><th className="px-4 py-2.5 font-semibold">{t.admin.email}</th><th className="px-4 py-2.5 font-semibold">{t.admin.adminCol}</th><th className="px-4 py-2.5 font-semibold">{t.admin.bookingsCol}</th><th className="px-4 py-2.5 font-semibold">{t.common.actions}</th></tr>
           </thead>
           <tbody>
             {users.map((u) => (
-              <tr key={u.id} className="border-t border-[#2a2a2a]">
-                <td className="px-4 py-2.5 font-semibold">{u.name}</td>
-                <td className="px-4 py-2.5">{u.email}</td>
-                <td className="px-4 py-2.5">{yesNo(Boolean(u.is_admin))}</td>
-                <td className="px-4 py-2.5">{u.bookings_count}</td>
+              <tr key={u.id} className="border-t border-slate-100 transition hover:bg-slate-50">
+                <td className="px-4 py-2.5 font-semibold text-slate-900">{u.name}</td>
+                <td className="px-4 py-2.5 text-slate-700">{u.email}</td>
+                <td className="px-4 py-2.5 text-slate-700">{yesNo(Boolean(u.is_admin))}</td>
+                <td className="px-4 py-2.5 text-slate-700">{u.bookings_count}</td>
                 <td className="flex gap-3 px-4 py-2.5">
-                  <button onClick={() => toggle(u.id)} className="text-vox-light hover:underline">{u.is_admin ? t.admin.revokeAdmin : t.admin.makeAdmin}</button>
-                  <button onClick={() => remove(u.id)} className="text-red-400 hover:underline">{t.common.delete}</button>
+                  <button onClick={() => toggle(u.id)} className="font-semibold text-vox-pink hover:underline">{u.is_admin ? t.admin.revokeAdmin : t.admin.makeAdmin}</button>
+                  <button onClick={() => remove(u.id)} className="font-medium text-red-500 hover:underline">{t.common.delete}</button>
                 </td>
               </tr>
             ))}

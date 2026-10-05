@@ -10,7 +10,7 @@ export default function Offers() {
       <p className="text-center text-sm uppercase tracking-widest text-slate-400">{t.offersPage.kicker}</p>
       <h1 className="mb-2 text-center text-3xl font-bold uppercase tracking-widest text-vox-blue">{t.offersPage.title}</h1>
       <p className="mx-auto mb-10 max-w-2xl text-center text-slate-500">{t.offersPage.sub}</p>
-      <div className="grid gap-6 md:grid-cols-3">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {OFFERS.map((o) => (
           <article key={o.title} className="flex flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:border-vox-pink hover:shadow-md">
             <div className="bg-gradient-to-br from-vox-pink-dark via-[#a30c60] to-black px-5 py-6">

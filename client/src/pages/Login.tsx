@@ -156,7 +156,7 @@ export default function Login() {
     <div className="bg-[#0b0b0e] text-white">
       <div className="mx-auto max-w-6xl px-6 pt-6">
         <Link to="/" className="inline-flex items-center gap-2">
-          <img src="/logo.png" alt="REX Cinemas" className="h-10 w-10" onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')} />
+          <img src="/logo.svg" alt="REX Cinemas" className="h-10 w-10" onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')} />
           <span className="text-2xl font-bold uppercase tracking-[2px] text-white">REX <span className="text-vox-pink">Cinemas</span></span>
         </Link>
       </div>

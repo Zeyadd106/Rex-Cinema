@@ -44,18 +44,18 @@ export default function AdminCheckIn() {
     }
   };
 
-  const input = 'w-full rounded-md border border-[#444] bg-black px-3 py-2.5 outline-none focus:border-vox font-mono';
+  const input = 'w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 font-mono text-slate-900 outline-none placeholder:text-slate-400 focus:border-vox-pink';
 
   return (
     <div>
-      <h1 className="mb-2 text-2xl font-bold">{t.admin.checkinTitle}</h1>
-      <p className="mb-6 text-sm text-[#999]">{t.admin.checkinSub}</p>
-      <form onSubmit={submit} className="grid max-w-xl gap-4 rounded-lg border border-[#333] bg-[#1a1a1a] p-8">
-        {error && <p className="rounded bg-red-950 px-3 py-2 text-sm text-red-300">{error}</p>}
+      <h1 className="mb-2 text-2xl font-bold text-vox-blue sm:text-3xl">{t.admin.checkinTitle}</h1>
+      <p className="mb-6 text-sm text-slate-500">{t.admin.checkinSub}</p>
+      <form onSubmit={submit} className="grid max-w-xl gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-8">
+        {error && <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600 ring-1 ring-red-100">{error}</p>}
         {result && (
-          <div className="rounded border border-green-700 bg-green-950 px-4 py-3 text-sm text-green-200">
+          <div className="rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
             <p className="font-semibold">{result.message}</p>
-            <div className="mt-2 space-y-1 text-green-100/90">
+            <div className="mt-2 space-y-1 text-green-700/90">
               <p><b>{result.booking.movie_title}</b> — {result.booking.show_date} at {result.booking.show_time?.slice(0, 5)}</p>
               <p>Guest: {result.booking.user_name} • Seats: {result.booking.seats.join(', ')}</p>
               <p>Ref: <span className="font-mono">{result.booking.booking_reference}</span></p>
@@ -63,14 +63,14 @@ export default function AdminCheckIn() {
           </div>
         )}
         <div>
-          <label className="mb-1 block text-sm text-[#aaa]">{t.admin.checkinRef}</label>
+          <label className="mb-1 block text-sm font-medium text-slate-600">{t.admin.checkinRef}</label>
            <input required value={ref} onChange={(e) => setRef(e.target.value)} placeholder="REXXXXXXXXX" className={input} />
         </div>
         <div>
-          <label className="mb-1 block text-sm text-[#aaa]">{t.admin.checkinCode}</label>
+          <label className="mb-1 block text-sm font-medium text-slate-600">{t.admin.checkinCode}</label>
           <input value={token} onChange={(e) => setToken(e.target.value)} placeholder="••••••••" className={input} />
         </div>
-        <button disabled={busy} className="rounded-md bg-vox py-3 font-semibold hover:bg-vox-dark disabled:opacity-50">
+        <button disabled={busy} className="rounded-lg bg-vox-pink py-3 font-bold text-white transition hover:bg-vox-pink-dark disabled:opacity-50">
           {busy ? t.admin.checkingIn : t.admin.checkinBtn}
         </button>
       </form>

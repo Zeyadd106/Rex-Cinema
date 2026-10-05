@@ -39,7 +39,7 @@ export default function FoodAndDrinks() {
         </div>
       ))}
       <div className="text-center">
-        <Link to="/" className="inline-block rounded-md bg-vox px-8 py-3 font-semibold text-white transition hover:bg-vox-dark">{t.food.browse}</Link>
+        <Link to="/" className="inline-block rounded-lg bg-vox-pink px-8 py-2.5 font-bold text-white transition hover:bg-vox-pink-dark">{t.food.browse}</Link>
       </div>
     </div>
     </div>

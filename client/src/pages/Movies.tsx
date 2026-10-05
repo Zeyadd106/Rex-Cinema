@@ -22,7 +22,7 @@ export default function Movies() {
   return (
     <div className="bg-white text-slate-900">
     <div className="mx-auto max-w-7xl px-[6%] py-12">
-      <h1 className="mb-2 text-center text-3xl font-bold uppercase tracking-widest text-vox-blue">{t.whatsOn}</h1>
+      <h1 className="mb-2 text-center text-2xl font-bold uppercase tracking-widest text-vox-blue sm:text-3xl">{t.whatsOn}</h1>
       {initialQ && <p className="mb-6 text-center text-sm text-slate-500">{t.moviesPage.resultsFor} “{initialQ}”</p>}
       <div className="mx-auto mb-8 max-w-md">
         <input

@@ -115,3 +115,334 @@ html[lang="ar"] body {
     animation: none;
   }
 }
+
+/* ── Animated format logos (IMAX / MAX / GOLD / 4DX / KIDS) ─ */
+.format-logo {
+  --format-color: #d40f7d;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  overflow: hidden;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  line-height: 1;
+  color: var(--format-color);
+  filter: drop-shadow(0 0 14px color-mix(in srgb, var(--format-color) 35%, transparent));
+  transition: transform 0.25s ease;
+}
+
+.group:hover .format-logo {
+  transform: scale(1.05);
+}
+
+.format-logo-text {
+  background: linear-gradient(100deg, var(--format-color) 30%, #fff 50%, var(--format-color) 70%);
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: format-sheen 3.4s linear infinite;
+}
+
+.format-logo-icon {
+  width: 1.6em;
+  height: 1.6em;
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+.format-logo-sheen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent 42%, rgba(255, 255, 255, 0.55) 50%, transparent 58%);
+  transform: translateX(-110%);
+  animation: format-sweep 3.4s ease-in-out infinite;
+}
+
+/* IMAX — expanding screen + scanning lines */
+.format-logo-imax .fl-frame {
+  fill: none;
+  stroke: var(--format-color);
+  stroke-width: 2;
+  transform-origin: center;
+  animation: imax-frame 2.8s ease-in-out infinite;
+}
+.format-logo-imax .fl-scan {
+  stroke: var(--format-color);
+  stroke-width: 1.6;
+  opacity: 0.9;
+  stroke-dasharray: 20;
+  stroke-dashoffset: 20;
+  animation: imax-scan 2.8s ease-in-out infinite;
+}
+.format-logo-imax .fl-scan-2 { animation-delay: 0.25s; }
+.format-logo-imax .fl-scan-3 { animation-delay: 0.5s; }
+
+/* MAX — electric bolt flash */
+.format-logo-max .fl-bolt {
+  fill: var(--format-color);
+  transform-origin: center;
+  animation: max-flash 2.2s ease-in-out infinite;
+}
+
+/* GOLD — crown float + sparkle twinkle */
+.format-logo-gold .fl-crown,
+.format-logo-gold .fl-crown-base { fill: var(--format-color); }
+.format-logo-gold .format-logo-icon { animation: gold-float 3.2s ease-in-out infinite; }
+.format-logo-gold .fl-spark {
+  fill: #ffe9a8;
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: gold-twinkle 1.8s ease-in-out infinite;
+}
+.format-logo-gold .fl-spark-2 { animation-delay: 0.4s; }
+.format-logo-gold .fl-spark-3 { animation-delay: 0.8s; }
+
+/* 4DX — rushing wind + chevrons */
+.format-logo-4dx .fl-wind line {
+  stroke: var(--format-color);
+  stroke-width: 2;
+  stroke-dasharray: 16;
+  animation: dx-wind 1.4s linear infinite;
+}
+.format-logo-4dx .fl-chevrons polyline {
+  stroke: #fff;
+  stroke-width: 2.4;
+  opacity: 0.95;
+  animation: dx-nudge 1.4s ease-in-out infinite;
+}
+.format-logo-4dx .fl-chevrons polyline:last-child { animation-delay: 0.18s; }
+.format-logo-4dx .format-logo-icon { animation: dx-shake 1.4s ease-in-out infinite; }
+
+/* KIDS — bouncing balloons */
+.format-logo-kids .fl-balloon circle { fill: var(--format-color); }
+.format-logo-kids .fl-balloon line { stroke: var(--format-color); stroke-width: 1.4; }
+.format-logo-kids .fl-balloon-2 circle { fill: #f59e0b; }
+.format-logo-kids .fl-dot { fill: #fff; }
+.format-logo-kids .fl-balloon { transform-origin: bottom center; transform-box: fill-box; }
+.format-logo-kids .fl-balloon-1 { animation: kids-bob 2.2s ease-in-out infinite; }
+.format-logo-kids .fl-balloon-2 { animation: kids-bob 2.2s ease-in-out 0.35s infinite; }
+.format-logo-kids .format-logo-icon { animation: kids-wiggle 3s ease-in-out infinite; }
+
+/* Sensory — calm breathing halo */
+.format-logo-sensory-friendly .fl-halo {
+  fill: none;
+  stroke: var(--format-color);
+  stroke-width: 1.8;
+  opacity: 0.7;
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: sensory-breathe 4s ease-in-out infinite;
+}
+.format-logo-sensory-friendly .fl-core { fill: var(--format-color); }
+.format-logo-sensory-friendly .fl-rays { stroke: var(--format-color); stroke-width: 1.6; }
+
+@keyframes format-sheen {
+  0% { background-position: 120% 0; }
+  100% { background-position: -120% 0; }
+}
+@keyframes format-sweep {
+  0%, 55% { transform: translateX(-110%); }
+  85%, 100% { transform: translateX(110%); }
+}
+@keyframes imax-frame {
+  0%, 100% { transform: scaleX(1); opacity: 1; }
+  50% { transform: scaleX(1.08); opacity: 0.85; }
+}
+@keyframes imax-scan {
+  0% { stroke-dashoffset: 20; opacity: 0; }
+  30% { opacity: 1; }
+  100% { stroke-dashoffset: -20; opacity: 0.9; }
+}
+@keyframes max-flash {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  12% { transform: scale(1.18) rotate(-4deg); opacity: 0.75; }
+  24% { transform: scale(1); opacity: 1; }
+  60% { transform: scale(1.1); opacity: 0.9; }
+}
+@keyframes gold-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2.5px); }
+}
+@keyframes gold-twinkle {
+  0%, 100% { transform: scale(0.6); opacity: 0.4; }
+  50% { transform: scale(1.25); opacity: 1; }
+}
+@keyframes dx-wind {
+  from { stroke-dashoffset: 16; }
+  to { stroke-dashoffset: -16; }
+}
+@keyframes dx-nudge {
+  0%, 100% { transform: translateX(0); opacity: 0.9; }
+  50% { transform: translateX(3px); opacity: 1; }
+}
+@keyframes dx-shake {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(0.6px, -0.6px); }
+  75% { transform: translate(-0.6px, 0.6px); }
+}
+@keyframes kids-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+@keyframes kids-wiggle {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(2deg); }
+}
+@keyframes sensory-breathe {
+  0%, 100% { transform: scale(1); opacity: 0.55; }
+  50% { transform: scale(1.1); opacity: 0.9; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .format-logo,
+  .format-logo-text,
+  .format-logo-sheen,
+  .format-logo-icon,
+  .format-logo-icon * {
+    animation: none !important;
+    transform: none !important;
+  }
+  .format-logo-text {
+    background: none;
+    color: var(--format-color);
+  }
+}
+
+/* ── Cinematic splash loader ─────────────────────────────── */
+.splash-orb {
+  position: absolute;
+  width: 60vmax;
+  height: 60vmax;
+  border-radius: 9999px;
+  filter: blur(90px);
+  opacity: 0.5;
+  pointer-events: none;
+}
+.splash-orb-pink {
+  background: radial-gradient(circle, rgba(212, 15, 125, 0.35), transparent 65%);
+  top: -20vmax;
+  inset-inline-start: -15vmax;
+  animation: splash-drift 5s ease-in-out infinite alternate;
+}
+.splash-orb-blue {
+  background: radial-gradient(circle, rgba(0, 157, 219, 0.28), transparent 65%);
+  bottom: -22vmax;
+  inset-inline-end: -15vmax;
+  animation: splash-drift 6s ease-in-out infinite alternate-reverse;
+}
+.splash-grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 26px 26px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+}
+
+.splash-glow {
+  position: absolute;
+  width: 11rem;
+  height: 11rem;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(212, 15, 125, 0.45), rgba(0, 157, 219, 0.18) 55%, transparent 70%);
+  filter: blur(18px);
+  animation: splash-glow 2.2s ease-in-out infinite;
+}
+.splash-ring {
+  position: absolute;
+  width: 8.5rem;
+  height: 8.5rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(212, 15, 125, 0.55);
+  animation: splash-ring 2.2s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+.splash-ring-2 {
+  border-color: rgba(0, 157, 219, 0.45);
+  animation-delay: 1.1s;
+}
+
+.splash-logo {
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 10px 36px rgba(212, 15, 125, 0.45));
+  animation: splash-logo-in 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.splash-shine {
+  position: absolute;
+  z-index: 2;
+  width: 8rem;
+  height: 8rem;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent 42%, rgba(255, 255, 255, 0.5) 50%, transparent 58%);
+  transform: translateX(-130%) rotate(0.001deg);
+  animation: splash-shine 2.2s ease-in-out 0.7s infinite;
+}
+
+.splash-letter {
+  display: inline-block;
+  opacity: 0;
+  animation: splash-letter-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.splash-sub {
+  opacity: 0;
+  animation: splash-fade-up 0.7s ease 1.35s both;
+}
+.splash-bar {
+  transform: scaleX(0);
+  animation: splash-bar-fill 1.9s cubic-bezier(0.3, 0.7, 0.3, 1) 0.25s forwards;
+}
+
+.splash-leaving {
+  opacity: 0;
+  transform: scale(1.05);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+  pointer-events: none;
+}
+
+@keyframes splash-logo-in {
+  0% { opacity: 0; transform: scale(0.55) translateY(22px); filter: blur(16px) brightness(0.6); }
+  55% { opacity: 1; transform: scale(1.05) translateY(0); filter: blur(0) brightness(1.1); }
+  100% { opacity: 1; transform: scale(1); filter: blur(0) brightness(1); }
+}
+@keyframes splash-glow {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
+@keyframes splash-ring {
+  0% { transform: scale(0.75); opacity: 0.9; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+@keyframes splash-shine {
+  0% { transform: translateX(-130%); opacity: 0; }
+  25% { opacity: 1; }
+  60%, 100% { transform: translateX(130%); opacity: 0; }
+}
+@keyframes splash-letter-in {
+  from { opacity: 0; transform: translateY(110%) rotate(4deg); }
+  to { opacity: 1; transform: translateY(0) rotate(0); }
+}
+@keyframes splash-fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes splash-bar-fill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+@keyframes splash-drift {
+  from { transform: translate(0, 0) scale(1); }
+  to { transform: translate(4vmax, 3vmax) scale(1.08); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .splash-orb, .splash-glow, .splash-ring, .splash-logo,
+  .splash-shine, .splash-letter, .splash-sub, .splash-bar {
+    animation-duration: 0.01s !important;
+    animation-iteration-count: 1 !important;
+  }
+}
