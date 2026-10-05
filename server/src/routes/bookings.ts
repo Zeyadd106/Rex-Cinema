@@ -37,14 +37,14 @@ router.get('/', auth, (req: AuthRequest, res) => {
   const all = req.query.all === 'true' && req.user!.is_admin;
   const rows = all
     ? (db.prepare(
-        `SELECT b.*, m.title AS movie_title, s.date AS show_date, s.time AS show_time, u.name AS user_name, u.email AS user_email,
+        `SELECT b.*, m.title AS movie_title, m.poster_path AS poster_path, s.date AS show_date, s.time AS show_time, u.name AS user_name, u.email AS user_email,
                 h.name AS hall_name, h.format, c.name AS cinema_name
          FROM bookings b JOIN showtimes s ON s.id = b.showtime_id JOIN movies m ON m.id = s.movie_id JOIN users u ON u.id = b.user_id
          LEFT JOIN halls h ON h.id = s.hall_id LEFT JOIN cinemas c ON c.id = h.cinema_id
          ORDER BY b.id DESC LIMIT 100`
       ).all() as Record<string, unknown>[])
     : (db.prepare(
-        `SELECT b.*, m.title AS movie_title, s.date AS show_date, s.time AS show_time, h.name AS hall_name, h.format, c.name AS cinema_name
+        `SELECT b.*, m.title AS movie_title, m.poster_path AS poster_path, s.date AS show_date, s.time AS show_time, h.name AS hall_name, h.format, c.name AS cinema_name
          FROM bookings b JOIN showtimes s ON s.id = b.showtime_id JOIN movies m ON m.id = s.movie_id
          LEFT JOIN halls h ON h.id = s.hall_id LEFT JOIN cinemas c ON c.id = h.cinema_id
          WHERE b.user_id = ? ORDER BY b.id DESC`

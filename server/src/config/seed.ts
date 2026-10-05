@@ -194,7 +194,7 @@ export function seed() {
     "INSERT INTO payments (booking_id, amount, payment_method, transaction_id, card_last_four, status) VALUES (?, ?, ?, ?, ?, 'completed')"
   );
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  const ref = () => 'VOX' + Array.from({ length: 8 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+  const ref = () => 'REX' + Array.from({ length: 8 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
   for (let i = 0; i < 6; i++) {
     const userId = i % 2 === 0 ? 2 : 1;
     const showId = rand(showIds);
@@ -234,4 +234,49 @@ export function seed() {
   insertSetting.run('tax_rate', '5');
 
   console.log('Seeding complete.');
+}
+
+/**
+ * Demo self-healing: showtime seed data is date-relative, so an old database
+ * eventually has no future showtimes ("No upcoming showtimes" everywhere).
+ * When the schedule runs dry, regenerate the next 7 days from the current
+ * catalog. Safe to run on every startup — a no-op when future shows exist.
+ */
+export function ensureFutureShowtimes() {
+  const future = (db.prepare("SELECT COUNT(*) c FROM showtimes WHERE date >= date('now')").get() as { c: number }).c;
+  if (Number(future) > 0) return;
+
+  const movies = db.prepare("SELECT id FROM movies WHERE status = 'current' ORDER BY id").all() as { id: number }[];
+  const halls = db.prepare('SELECT id, cinema_id FROM halls ORDER BY cinema_id, id').all() as { id: number; cinema_id: number }[];
+  if (movies.length === 0 || halls.length === 0) return;
+
+  const times = ['10:00', '12:30', '15:00', '17:30', '20:00', '22:30'];
+  const ins = db.prepare('INSERT INTO showtimes (movie_id, hall_id, date, time) VALUES (?, ?, ?, ?)');
+  const byCinema = new Map<number, number[]>();
+  for (const h of halls) {
+    const arr = byCinema.get(h.cinema_id) ?? [];
+    arr.push(h.id);
+    byCinema.set(h.cinema_id, arr);
+  }
+  const d = new Date();
+  const iso = (off: number) => {
+    const t = new Date(d);
+    t.setDate(t.getDate() + off);
+    return t.toISOString().slice(0, 10);
+  };
+  let created = 0;
+  for (const [, hallIds] of byCinema) {
+    const perHall = Math.ceil(movies.length / hallIds.length);
+    hallIds.forEach((hallId, hi) => {
+      for (const m of movies.slice(hi * perHall, hi * perHall + perHall)) {
+        for (let day = 0; day < 7; day++) {
+          for (const t of times.slice(0, 3)) {
+            ins.run(m.id, hallId, iso(day), t);
+            created++;
+          }
+        }
+      }
+    });
+  }
+  console.log(`Schedule was empty — generated ${created} showtimes for the next 7 days.`);
 }

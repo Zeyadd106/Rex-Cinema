@@ -22,3 +22,96 @@ html, body {
 html[lang="ar"] body {
   font-family: "Cairo", "Poppins", ui-sans-serif, system-ui, sans-serif;
 }
+
+/* ── Premium seat-map motion ─────────────────────────────── */
+@keyframes seat-pop {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.28); }
+  100% { transform: scale(1.12); }
+}
+
+@keyframes seat-row-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes screen-breathe {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+
+.seat-row-enter {
+  animation: seat-row-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.seat-selected-pop {
+  animation: seat-pop 0.28s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.screen-beam {
+  animation: screen-breathe 4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .seat-row-enter, .seat-selected-pop, .screen-beam {
+    animation: none;
+  }
+}
+
+/* ── E-ticket entrance ─────────────────────────────────────── */
+@keyframes ticket-in {
+  from { opacity: 0; transform: translateY(28px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes check-pop {
+  0% { transform: scale(0); }
+  60% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+.ticket-enter {
+  animation: ticket-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.check-pop {
+  animation: check-pop 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticket-enter, .check-pop {
+    animation: none;
+  }
+}
+
+/* ── Hero banner slow zoom ─────────────────────────────────── */
+@keyframes hero-zoom {
+  from { transform: scale(1); }
+  to { transform: scale(1.07); }
+}
+
+.hero-zoom {
+  animation: hero-zoom 6.5s linear forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-zoom {
+    animation: none;
+  }
+}
+
+/* ── Hero coverflow entrance ───────────────────────────────── */
+@keyframes hero-poster-in {
+  from { opacity: 0; transform: scale(0.94) translateY(12px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.hero-poster-in {
+  animation: hero-poster-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-poster-in {
+    animation: none;
+  }
+}

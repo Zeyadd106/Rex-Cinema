@@ -223,15 +223,12 @@ export default function Register() {
         </div>
 
         {/* ── Photo panel ── */}
-        <div className="hidden overflow-hidden rounded-2xl lg:sticky lg:top-6 lg:block">
+        <div className="hidden overflow-hidden rounded-2xl bg-gradient-to-br from-vox-navy via-[#3a0a14] to-black lg:sticky lg:top-6 lg:block">
           <img
             src="/images/login-audience.png" alt="Movie night at REX Cinemas"
             className="aspect-[4/5] w-full object-cover"
             loading="eager"
-            onError={(e) => {
-              const img = e.target as HTMLImageElement;
-              if (!img.src.endsWith('banner-odyssey.jpg')) img.src = '/banners/banner-odyssey.jpg';
-            }}
+            onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')}
           />
         </div>
       </div>

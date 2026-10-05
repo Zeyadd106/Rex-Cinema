@@ -104,10 +104,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     setQuery('');
   };
 
-  const goFindTimes = () => {
+  const goMovies = () => {
     setMobileOpen(false);
-    navigate('/');
-    setTimeout(() => document.getElementById('find-times')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
+    navigate('/movies');
   };
 
   const formats = ['IMAX', 'MAX', 'GOLD', '4DX', 'KIDS'];
@@ -225,7 +224,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 <Link to="/register" onClick={() => setMobileOpen(false)} className="flex-1 rounded-full bg-gradient-to-b from-vox-pink to-vox-pink-dark px-4 py-2.5 text-center text-sm font-semibold text-white shadow-[0_4px_14px_rgba(212,15,125,0.4)]">{t.signUp}</Link>
               </div>
             )}
-            <button onClick={goFindTimes} className="m-5 mt-0 w-[calc(100%-2.5rem)] rounded-full bg-gradient-to-b from-vox-pink to-vox-pink-dark px-4 py-2.5 text-sm font-bold uppercase tracking-wide text-white shadow-[0_4px_14px_rgba(212,15,125,0.4)]">{t.findTimes}</button>
+            <button onClick={goMovies} className="m-5 mt-0 w-[calc(100%-2.5rem)] rounded-full bg-gradient-to-b from-vox-pink to-vox-pink-dark px-4 py-2.5 text-sm font-bold uppercase tracking-wide text-white shadow-[0_4px_14px_rgba(212,15,125,0.4)]">{t.movies}</button>
           </nav>
         )}
 

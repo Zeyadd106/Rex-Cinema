@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { migrate } from './config/db.js';
-import { seed } from './config/seed.js';
+import { seed, ensureFutureShowtimes } from './config/seed.js';
 import authRoutes from './routes/auth.js';
 import movieRoutes from './routes/movies.js';
 import showtimeRoutes from './routes/showtimes.js';
@@ -21,6 +21,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 migrate();
 seed();
+ensureFutureShowtimes();
 
 export const app = express();
 app.use(cors({ origin: process.env.CLIENT_URL?.split(',') ?? true, credentials: true }));
@@ -40,12 +41,12 @@ app.use('/api/admin', adminRoutes);
 app.get('/api/dashboard', auth, (req: AuthRequest, res) => {
   const today = new Date().toISOString().slice(0, 10);
   const upcoming = db.prepare(
-    `SELECT b.*, m.title AS movie_title, s.date AS show_date, s.time AS show_time
+    `SELECT b.*, m.title AS movie_title, m.poster_path AS poster_path, s.date AS show_date, s.time AS show_time
      FROM bookings b JOIN showtimes s ON s.id=b.showtime_id JOIN movies m ON m.id=s.movie_id
      WHERE b.user_id = ? AND s.date >= ? ORDER BY s.date, s.time LIMIT 5`
   ).all(req.user!.id, today);
   const history = db.prepare(
-    `SELECT b.*, m.title AS movie_title, s.date AS show_date, s.time AS show_time
+    `SELECT b.*, m.title AS movie_title, m.poster_path AS poster_path, s.date AS show_date, s.time AS show_time
      FROM bookings b JOIN showtimes s ON s.id=b.showtime_id JOIN movies m ON m.id=s.movie_id
      WHERE b.user_id = ? AND s.date < ? ORDER BY s.date DESC LIMIT 10`
   ).all(req.user!.id, today);

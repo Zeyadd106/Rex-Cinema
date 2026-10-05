@@ -233,15 +233,12 @@ export default function Login() {
         </div>
 
         {/* ── Photo panel ── */}
-        <div className="hidden overflow-hidden rounded-2xl lg:block">
+        <div className="hidden overflow-hidden rounded-2xl bg-gradient-to-br from-vox-navy via-[#3a0a14] to-black lg:block">
           <img
             src="/images/login-audience.png" alt="Movie night at REX Cinemas"
             className="aspect-[4/5] w-full object-cover"
             loading="eager"
-            onError={(e) => {
-              const img = e.target as HTMLImageElement;
-              if (!img.src.endsWith('banner-odyssey.jpg')) img.src = '/banners/banner-odyssey.jpg';
-            }}
+            onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')}
           />
         </div>
       </div>

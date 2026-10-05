@@ -3,68 +3,69 @@ import { Link } from 'react-router-dom';
 import { api, apiError } from '../services/api';
 import { Movie } from '../types';
 import MovieCard, { Poster } from '../components/MovieCard';
-import FindTimes from '../components/FindTimes';
 import { FORMATS } from './WaysToWatch';
 import { useLang } from '../context/LangContext';
 
-const SLIDES = [
-  { src: '/banners/banner-red-flag.jpg', alt: 'Red Flag', movieId: 1 },
-  { src: '/banners/banner-resident-evil.jpg', alt: 'Resident Evil', movieId: 2 },
-  { src: '/banners/banner-mahmoud.jpg', alt: 'Mahmoud El Tany', movieId: 3 },
-  { src: '/banners/banner-spider-man.jpg', alt: 'Spider-Man: Brand New Day', movieId: 4 },
-  { src: '/banners/banner-odyssey.jpg', alt: 'The Odyssey', movieId: 5 },
-];
-
-function HeroCarousel() {
+function HeroCarousel({ movies }: { movies: Movie[] }) {
+  const slides = movies.filter((m) => m.poster_url).slice(0, 8);
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const timer = useRef<number | null>(null);
 
   useEffect(() => {
-    if (paused) return;
-    timer.current = window.setInterval(() => setIndex((i) => (i + 1) % SLIDES.length), 6000);
+    if (paused || slides.length < 2) return;
+    timer.current = window.setInterval(() => setIndex((i) => (i + 1) % slides.length), 5500);
     return () => { if (timer.current) window.clearInterval(timer.current); };
-  }, [paused]);
+  }, [paused, slides.length]);
+
+  if (slides.length === 0) return null;
+  const go = (dir: 1 | -1) => setIndex((index + dir + slides.length) % slides.length);
 
   return (
     <section
-      className="relative overflow-hidden bg-black"
+      className="relative h-[62vh] max-h-[640px] min-h-[420px] overflow-hidden bg-black"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
-      aria-label="Featured movies"
+      aria-label="Now showing"
     >
-      <div className="relative mx-auto aspect-[2/1] max-w-[1100px]">
-        {SLIDES.map((s, i) => (
-          <Link
-            key={s.src}
-            to={`/movies/${s.movieId}#showtimes`}
-            aria-label={`Read more about ${s.alt}`}
-            aria-hidden={i !== index}
-            className={`absolute inset-0 transition-opacity duration-700 ${i === index ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
-          >
-            <img src={s.src} alt={s.alt} className="h-full w-full object-cover" loading={i === 0 ? 'eager' : 'lazy'} />
-          </Link>
-        ))}
-        <button
-          onClick={() => setIndex((index - 1 + SLIDES.length) % SLIDES.length)}
-          aria-label="Previous"
-          className="absolute start-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 text-xl text-white transition hover:bg-vox"
-        >‹</button>
-        <button
-          onClick={() => setIndex((index + 1) % SLIDES.length)}
-          aria-label="Next"
-          className="absolute end-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 text-xl text-white transition hover:bg-vox"
-        >›</button>
-        <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-2">
-          {SLIDES.map((s, i) => (
-            <button
-              key={s.src}
-              onClick={() => setIndex(i)}
-              aria-label={`Go to ${s.alt}`}
-              className={`h-2 rounded-full transition-all ${i === index ? 'w-8 bg-vox' : 'w-2 bg-white/50 hover:bg-white'}`}
+      {slides.map((m, i) => (
+        <Link
+          key={m.id}
+          to={`/movies/${m.id}`}
+          aria-label={m.title}
+          aria-hidden={i !== index}
+          className={`absolute inset-0 transition-opacity duration-700 ${i === index ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
+        >
+          {m.poster_url && (
+            <img
+              src={m.poster_url} alt={m.title}
+              className={`h-full w-full object-cover object-top ${i === index ? 'hero-zoom' : ''}`}
+              loading={i === 0 ? 'eager' : 'lazy'}
             />
-          ))}
-        </div>
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
+        </Link>
+      ))}
+
+      <button
+        onClick={() => go(-1)}
+        aria-label="Previous"
+        className="absolute left-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-2xl leading-none text-white transition hover:scale-105 hover:bg-vox-pink sm:left-8"
+      >‹</button>
+      <button
+        onClick={() => go(1)}
+        aria-label="Next"
+        className="absolute right-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-2xl leading-none text-white transition hover:scale-105 hover:bg-vox-pink sm:right-8"
+      >›</button>
+      <div className="absolute bottom-5 left-1/2 flex -translate-x-1/2 items-center gap-2">
+        {slides.map((s, i) => (
+          <button
+            key={s.id}
+            onClick={() => setIndex(i)}
+            aria-label={`Go to ${s.title}`}
+            className={`h-2 rounded-full transition-all duration-300 ${i === index ? 'w-9 bg-vox-pink' : 'w-2 bg-white/50 hover:bg-white/80'}`}
+          />
+        ))}
       </div>
     </section>
   );
@@ -91,11 +92,7 @@ export default function Home() {
 
   return (
     <div>
-      <section id="find-times" className="scroll-mt-48 px-[6%] py-8">
-        <FindTimes />
-      </section>
-
-      <HeroCarousel />
+      <HeroCarousel movies={movies} />
 
       <section className="bg-white px-[6%] py-12 text-slate-900">
         <div className="mx-auto mb-8 flex max-w-7xl items-end justify-between">

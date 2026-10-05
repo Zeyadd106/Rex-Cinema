@@ -111,6 +111,7 @@ export interface Booking {
   checked_in_at: string | null;
   paid_at: string | null;
   movie_title?: string;
+  poster_path?: string;
   show_date?: string;
   show_time?: string;
   hall_name?: string;
