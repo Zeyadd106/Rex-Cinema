@@ -27,6 +27,9 @@ export const app = express();
 app.use(cors({ origin: process.env.CLIENT_URL?.split(',') ?? true, credentials: true }));
 app.use(express.json());
 app.use('/uploads', express.static(path.resolve(__dirname, '../uploads')));
+if (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME) {
+  app.use('/uploads', express.static('/tmp/uploads'));
+}
 
 app.get('/api/health', (_req, res) => res.json({ ok: true, app: 'REX Cinemas API' }));
 app.use('/api/auth', authRoutes);

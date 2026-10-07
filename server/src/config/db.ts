@@ -4,8 +4,13 @@ import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const dataDir = path.resolve(__dirname, '../../data');
-fs.mkdirSync(dataDir, { recursive: true });
+const isVercel = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
+const dataDir = isVercel ? '/tmp/data' : (process.env.DATA_DIR || path.resolve(__dirname, '../../data'));
+try {
+  fs.mkdirSync(dataDir, { recursive: true });
+} catch {
+  // Ignore error if directory already exists or file system is read-only
+}
 
 const dbPath = process.env.DB_PATH || path.join(dataDir, 'vox.db');
 export const db = new DatabaseSync(dbPath);

@@ -2,15 +2,31 @@
   "name": "rex-cinemas",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "description": "REX Cinemas — movie ticket booking platform (React + TypeScript + Tailwind frontend, Node + TypeScript + SQLite backend)",
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "workspaces": [
+    "server",
+    "client"
+  ],
   "scripts": {
     "install:all": "npm --prefix server install && npm --prefix client install",
     "dev": "concurrently -c \"#e31837,#38bdf8\" -n \"server,client\" \"npm --prefix server run dev\" \"npm --prefix client run dev\"",
     "dev:server": "npm --prefix server run dev",
     "dev:client": "npm --prefix client run dev",
-    "build": "npm --prefix server run build && npm --prefix client run build",
+    "build": "npm --prefix server run build && npm --prefix client run build && node -e \"if(fs.existsSync('server/uploads')) fs.cpSync('server/uploads', 'client/dist/uploads', {recursive: true})\"",
     "typecheck": "npm --prefix server run typecheck && npm --prefix client run typecheck",
     "start": "npm --prefix server run start"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1"
   },
   "devDependencies": {
     "concurrently": "^9.0.1"

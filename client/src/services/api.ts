@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-export const api = axios.create({ baseURL: '/api' });
+const envBase = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
+export const api = axios.create({ baseURL: envBase ? `${envBase}/api` : '/api' });
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('vox_token');

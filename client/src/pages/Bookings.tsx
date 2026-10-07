@@ -8,7 +8,8 @@ import { fmtDay } from '../i18n';
 export function posterSrc(path: string | undefined): string | null {
   if (!path) return null;
   if (/^https?:\/\//.test(path)) return path;
-  return `/uploads/posters/${path}`;
+  const base = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
+  return `${base}/uploads/posters/${path}`;
 }
 
 function StatusPill({ booking, paid, pending, cancelled }: { booking: Booking; paid: string; pending: string; cancelled: string }) {

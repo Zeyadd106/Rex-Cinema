@@ -8,8 +8,13 @@ import { auth, admin, AuthRequest } from '../middleware/auth.js';
 
 const router = Router();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const posterDir = path.resolve(__dirname, '../../uploads/posters');
-fs.mkdirSync(posterDir, { recursive: true });
+const isVercel = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
+const posterDir = isVercel ? '/tmp/uploads/posters' : path.resolve(__dirname, '../../uploads/posters');
+try {
+  fs.mkdirSync(posterDir, { recursive: true });
+} catch {
+  // Directory might already exist or read-only
+}
 
 const storage = multer.diskStorage({
   destination: (_req, _file, cb) => cb(null, posterDir),
