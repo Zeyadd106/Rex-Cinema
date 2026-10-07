@@ -3,7 +3,7 @@ import multer from 'multer';
 import path from 'node:path';
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { db } from '../config/db.js';
+import { insert, one, query, run } from '../config/db.js';
 import { auth, admin, AuthRequest } from '../middleware/auth.js';
 
 const router = Router();
@@ -60,51 +60,52 @@ function validateMovie(body: Record<string, any>, posterRequired: boolean) {
   return errors;
 }
 
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   const status = String(req.query.status ?? 'all');
-  let rows;
+  let rows: Record<string, unknown>[];
   if (status === 'current' || status === 'coming_soon') {
-    rows = db.prepare('SELECT * FROM movies WHERE status = ? ORDER BY id DESC').all(status);
+    rows = await query('SELECT * FROM movies WHERE status = $1 ORDER BY id DESC', [status]);
   } else {
-    rows = db.prepare('SELECT * FROM movies ORDER BY id DESC').all();
+    rows = await query('SELECT * FROM movies ORDER BY id DESC');
   }
-  res.json({ movies: (rows as Record<string, unknown>[]).map(serializeMovie) });
+  res.json({ movies: rows.map(serializeMovie) });
 });
 
-router.get('/:id', (req, res) => {
-  const movie = db.prepare('SELECT * FROM movies WHERE id = ?').get(req.params.id) as Record<string, unknown> | null;
+router.get('/:id', async (req, res) => {
+  const movie = await one<Record<string, unknown>>('SELECT * FROM movies WHERE id = $1', [req.params.id]);
   if (!movie) return res.status(404).json({ message: 'Movie not found' });
   const today = new Date().toISOString().slice(0, 10);
-  const showtimes = db.prepare("SELECT * FROM showtimes WHERE movie_id = ? AND date >= ? ORDER BY date, time").all(movie.id as number, today);
+  const showtimes = await query("SELECT * FROM showtimes WHERE movie_id = $1 AND date >= $2 ORDER BY date, time", [movie.id as number, today]);
   res.json({ movie: serializeMovie(movie), showtimes });
 });
 
-router.post('/:id/notify', (req, res) => {
-  const movie = db.prepare('SELECT id FROM movies WHERE id = ?').get(req.params.id);
+router.post('/:id/notify', async (req, res) => {
+  const movie = await one('SELECT id FROM movies WHERE id = $1', [req.params.id]);
   if (!movie) return res.status(404).json({ message: 'Movie not found' });
   res.json({ message: 'Notification set successfully. We will email you when tickets are available.' });
 });
 
-router.post('/', auth, admin, upload.single('poster'), (req: AuthRequest, res) => {
+router.post('/', auth, admin, upload.single('poster'), async (req: AuthRequest, res) => {
   const body: Record<string, any> = { ...(req.body as object), _poster: Boolean(req.file) };
   const errors = validateMovie(body, true);
   if (Object.keys(errors).length) {
     if (req.file) fs.unlinkSync(req.file.path);
     return res.status(422).json({ errors });
   }
-  const r = db.prepare(
-    'INSERT INTO movies (title, description, duration, poster_path, trailer_url, genre, rating, status, release_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
-  ).run(
-    String(body.title).trim(), String(body.description).trim(), String(body.duration).trim(),
-    req.file!.filename, String(body.trailer_url ?? '').trim(), String(body.genre), String(body.rating),
-    String(body.status), String(body.release_date)
+  const id = await insert(
+    'INSERT INTO movies (title, description, duration, poster_path, trailer_url, genre, rating, status, release_date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id',
+    [
+      String(body.title).trim(), String(body.description).trim(), String(body.duration).trim(),
+      req.file!.filename, String(body.trailer_url ?? '').trim(), String(body.genre), String(body.rating),
+      String(body.status), String(body.release_date),
+    ]
   );
-  const movie = db.prepare('SELECT * FROM movies WHERE id = ?').get(Number(r.lastInsertRowid));
-  res.status(201).json({ movie: serializeMovie(movie as Record<string, unknown>), message: 'Movie created successfully' });
+  const movie = await one<Record<string, unknown>>('SELECT * FROM movies WHERE id = $1', [id]);
+  res.status(201).json({ movie: serializeMovie(movie!), message: 'Movie created successfully' });
 });
 
-router.put('/:id', auth, admin, upload.single('poster'), (req: AuthRequest, res) => {
-  const movie = db.prepare('SELECT * FROM movies WHERE id = ?').get(req.params.id) as Record<string, unknown> | null;
+router.put('/:id', auth, admin, upload.single('poster'), async (req: AuthRequest, res) => {
+  const movie = await one<Record<string, unknown>>('SELECT * FROM movies WHERE id = $1', [req.params.id]);
   if (!movie) {
     if (req.file) fs.unlinkSync(req.file.path);
     return res.status(404).json({ message: 'Movie not found' });
@@ -122,22 +123,23 @@ router.put('/:id', auth, admin, upload.single('poster'), (req: AuthRequest, res)
     }
     poster = req.file.filename;
   }
-  db.prepare(
-    'UPDATE movies SET title=?, description=?, duration=?, poster_path=?, trailer_url=?, genre=?, rating=?, status=?, release_date=?, updated_at=datetime(\'now\') WHERE id=?'
-  ).run(
-    String(body.title).trim(), String(body.description).trim(), String(body.duration).trim(),
-    poster, String(body.trailer_url ?? '').trim(), String(body.genre), String(body.rating),
-    String(body.status), String(body.release_date), req.params.id
+  await run(
+    'UPDATE movies SET title=$1, description=$2, duration=$3, poster_path=$4, trailer_url=$5, genre=$6, rating=$7, status=$8, release_date=$9, updated_at=NOW() WHERE id=$10',
+    [
+      String(body.title).trim(), String(body.description).trim(), String(body.duration).trim(),
+      poster, String(body.trailer_url ?? '').trim(), String(body.genre), String(body.rating),
+      String(body.status), String(body.release_date), req.params.id,
+    ]
   );
-  const updated = db.prepare('SELECT * FROM movies WHERE id = ?').get(req.params.id);
-  res.json({ movie: serializeMovie(updated as Record<string, unknown>), message: 'Movie updated successfully' });
+  const updated = await one<Record<string, unknown>>('SELECT * FROM movies WHERE id = $1', [req.params.id]);
+  res.json({ movie: serializeMovie(updated!), message: 'Movie updated successfully' });
 });
 
-router.delete('/:id', auth, admin, (req: AuthRequest, res) => {
-  const movie = db.prepare('SELECT * FROM movies WHERE id = ?').get(req.params.id) as Record<string, unknown> | null;
+router.delete('/:id', auth, admin, async (req: AuthRequest, res) => {
+  const movie = await one<Record<string, unknown>>('SELECT * FROM movies WHERE id = $1', [req.params.id]);
   if (!movie) return res.status(404).json({ message: 'Movie not found' });
   const poster = movie.poster_path as string;
-  db.prepare('DELETE FROM movies WHERE id = ?').run(req.params.id);
+  await run('DELETE FROM movies WHERE id = $1', [req.params.id]);
   if (poster && !/^https?:\/\//.test(poster)) {
     try { fs.unlinkSync(path.join(posterDir, path.basename(poster))); } catch { /* ignore */ }
   }

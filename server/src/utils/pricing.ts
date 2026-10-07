@@ -12,10 +12,10 @@ export interface PriceQuote {
 
 const round2 = (n: number) => Math.round(n * 100) / 100;
 
-export function priceQuote(seatCount: number): PriceQuote {
+export async function priceQuote(seatCount: number): Promise<PriceQuote> {
   const subtotal = round2(seatCount * TICKET_PRICE);
-  const booking_fee = Math.max(0, Number(getSetting('booking_fee', '0')) || 0);
-  const tax_rate = Math.min(100, Math.max(0, Number(getSetting('tax_rate', '0')) || 0));
+  const booking_fee = Math.max(0, Number(await getSetting('booking_fee', '0')) || 0);
+  const tax_rate = Math.min(100, Math.max(0, Number(await getSetting('tax_rate', '0')) || 0));
   const tax_amount = round2((subtotal + booking_fee) * (tax_rate / 100));
   return { subtotal, booking_fee, tax_amount, total: round2(subtotal + booking_fee + tax_amount), tax_rate };
 }

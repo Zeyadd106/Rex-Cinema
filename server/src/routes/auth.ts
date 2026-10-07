@@ -1,13 +1,13 @@
 import { Router } from 'express';
 import bcrypt from 'bcryptjs';
 import crypto from 'node:crypto';
-import { db } from '../config/db.js';
+import { insert, one, run } from '../config/db.js';
 import { signToken, publicUser } from '../utils/auth.js';
 import { auth, AuthRequest } from '../middleware/auth.js';
 
 const router = Router();
 
-router.post('/register', (req, res) => {
+router.post('/register', async (req, res) => {
   const { name, first_name, last_name, email, password, phone, birth_date, gender, preferred_cinema_id } = req.body as Record<string, unknown>;
   const fullName = String(first_name ?? name ?? '').trim() + (first_name ? ` ${String(last_name ?? '').trim()}` : '');
   const errors: Record<string, string[]> = {};
@@ -25,34 +25,35 @@ router.post('/register', (req, res) => {
     errors.gender = ['Select a valid option'];
   }
   if (preferred_cinema_id !== undefined && preferred_cinema_id !== '' && preferred_cinema_id !== null) {
-    if (!db.prepare('SELECT id FROM cinemas WHERE id = ?').get(Number(preferred_cinema_id))) {
+    if (!await one('SELECT id FROM cinemas WHERE id = $1', [Number(preferred_cinema_id)])) {
       errors.preferred_cinema_id = ['Selected cinema is invalid'];
     }
   }
   if (Object.keys(errors).length) return res.status(422).json({ errors });
 
   const emailNorm = String(email).toLowerCase();
-  const exists = db.prepare('SELECT id FROM users WHERE email = ?').get(emailNorm);
+  const exists = await one('SELECT id FROM users WHERE email = $1', [emailNorm]);
   if (exists) return res.status(422).json({ errors: { email: ['Email is already taken'] } });
 
   const hash = bcrypt.hashSync(String(password), 10);
-  const r = db.prepare(
-    'INSERT INTO users (name, email, password, is_admin, phone, birth_date, gender, preferred_cinema_id) VALUES (?, ?, ?, 0, ?, ?, ?, ?)'
-  ).run(
-    fullName.trim(),
-    emailNorm,
-    hash,
-    phone ? String(phone).trim() : null,
-    birth_date ? String(birth_date) : null,
-    gender ? String(gender) : '',
-    preferred_cinema_id ? Number(preferred_cinema_id) : null
+  const id = await insert(
+    'INSERT INTO users (name, email, password, is_admin, phone, birth_date, gender, preferred_cinema_id) VALUES ($1, $2, $3, 0, $4, $5, $6, $7) RETURNING id',
+    [
+      fullName.trim(),
+      emailNorm,
+      hash,
+      phone ? String(phone).trim() : null,
+      birth_date ? String(birth_date) : null,
+      gender ? String(gender) : '',
+      preferred_cinema_id ? Number(preferred_cinema_id) : null,
+    ]
   );
-  const row = db.prepare('SELECT * FROM users WHERE id = ?').get(Number(r.lastInsertRowid)) as Record<string, unknown>;
-  const user = publicUser(row);
+  const row = await one<Record<string, unknown>>('SELECT * FROM users WHERE id = $1', [id]);
+  const user = publicUser(row!);
   return res.status(201).json({ user, token: signToken(user as never), message: 'Account created. Welcome to REX Rewards!' });
 });
 
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
   const { email, password } = req.body as { email?: string; password?: string };
   const identifier = String(email ?? '').trim();
   if (!identifier || !password) return res.status(422).json({ errors: { email: ['Email or phone number and password are required'] } });
@@ -69,14 +70,15 @@ router.post('/login', (req, res) => {
   let row: Record<string, unknown> | null = null;
   if (/^\+?[\d\s-]{8,17}$/.test(identifier)) {
     const variants = normPhone(identifier);
-    row = db.prepare(
-      `SELECT * FROM users WHERE ${variants.map(() => "REPLACE(REPLACE(phone, ' ', ''), '-', '') = ?").join(' OR ')}`
-    ).get(...variants) as Record<string, unknown> | null;
+    row = await one(
+      `SELECT * FROM users WHERE ${variants.map((_, i) => `REPLACE(REPLACE(phone, ' ', ''), '-', '') = $${i + 1}`).join(' OR ')}`,
+      variants
+    );
     if (!row) {
-      row = db.prepare('SELECT * FROM users WHERE email = ?').get(identifier.toLowerCase()) as Record<string, unknown> | null;
+      row = await one('SELECT * FROM users WHERE email = $1', [identifier.toLowerCase()]);
     }
   } else {
-    row = db.prepare('SELECT * FROM users WHERE email = ?').get(identifier.toLowerCase()) as Record<string, unknown> | null;
+    row = await one('SELECT * FROM users WHERE email = $1', [identifier.toLowerCase()]);
   }
   if (!row || !bcrypt.compareSync(String(password), row.password as string)) {
     return res.status(401).json({ message: 'Invalid login credentials' });
@@ -85,22 +87,22 @@ router.post('/login', (req, res) => {
   return res.json({ user, token: signToken(user as never), message: 'Login successful' });
 });
 
-router.get('/me', auth, (req: AuthRequest, res) => {
-  const row = db.prepare('SELECT * FROM users WHERE id = ?').get(req.user!.id) as Record<string, unknown> | null;
+router.get('/me', auth, async (req: AuthRequest, res) => {
+  const row = await one<Record<string, unknown>>('SELECT * FROM users WHERE id = $1', [req.user!.id]);
   if (!row) return res.status(401).json({ message: 'Unauthenticated' });
   return res.json({ user: publicUser(row) });
 });
 
 /** Request a password reset link (token emailed in production; logged in dev). */
-router.post('/forgot', (req, res) => {
+router.post('/forgot', async (req, res) => {
   const email = String(req.body?.email ?? '').trim().toLowerCase();
   const done = { message: 'If an account exists for this email, a reset link has been sent.' };
   if (!email || !/^\S+@\S+\.\S+$/.test(email)) return res.json(done);
-  const row = db.prepare('SELECT id FROM users WHERE email = ?').get(email) as { id: number } | null;
+  const row = await one<{ id: number }>('SELECT id FROM users WHERE email = $1', [email]);
   if (!row) return res.json(done);
   const token = crypto.randomBytes(32).toString('hex');
-  db.prepare('DELETE FROM password_resets WHERE email = ?').run(email);
-  db.prepare("INSERT INTO password_resets (email, token, expires_at) VALUES (?, ?, datetime('now', '+1 hour'))").run(email, token);
+  await run('DELETE FROM password_resets WHERE email = $1', [email]);
+  await run("INSERT INTO password_resets (email, token, expires_at) VALUES ($1, $2, NOW() + INTERVAL '1 hour')", [email, token]);
   const link = `${process.env.CLIENT_URL ?? 'http://localhost:5173'}/reset/${token}`;
   if (process.env.NODE_ENV !== 'production') {
     console.log(`[auth] password reset for ${email}: ${link}`);
@@ -109,22 +111,22 @@ router.post('/forgot', (req, res) => {
   return res.json(done);
 });
 
-router.get('/reset/:token', (req, res) => {
-  const row = db.prepare("SELECT email FROM password_resets WHERE token = ? AND expires_at > datetime('now')").get(req.params.token);
+router.get('/reset/:token', async (req, res) => {
+  const row = await one("SELECT email FROM password_resets WHERE token = $1 AND expires_at > NOW()", [req.params.token]);
   if (!row) return res.status(404).json({ message: 'This reset link is invalid or has expired.' });
   return res.json({ valid: true });
 });
 
-router.post('/reset', (req, res) => {
+router.post('/reset', async (req, res) => {
   const { token, password } = req.body as { token?: string; password?: string };
   if (!token) return res.status(422).json({ errors: { token: ['Reset token is required'] } });
   if (!password || String(password).length < 8) {
     return res.status(422).json({ errors: { password: ['Password must be at least 8 characters'] } });
   }
-  const row = db.prepare("SELECT email FROM password_resets WHERE token = ? AND expires_at > datetime('now')").get(String(token)) as { email: string } | null;
+  const row = await one<{ email: string }>("SELECT email FROM password_resets WHERE token = $1 AND expires_at > NOW()", [String(token)]);
   if (!row) return res.status(422).json({ errors: { token: ['This reset link is invalid or has expired'] } });
-  db.prepare('UPDATE users SET password = ?, updated_at = datetime(\'now\') WHERE email = ?').run(bcrypt.hashSync(String(password), 10), row.email);
-  db.prepare('DELETE FROM password_resets WHERE email = ?').run(row.email);
+  await run('UPDATE users SET password = $1, updated_at = NOW() WHERE email = $2', [bcrypt.hashSync(String(password), 10), row.email]);
+  await run('DELETE FROM password_resets WHERE email = $1', [row.email]);
   return res.json({ message: 'Password updated. You can now log in.' });
 });
 

@@ -1,5 +1,21 @@
 import bcrypt from 'bcryptjs';
-import { db, migrate } from './db.js';
+import { insert, migrate, one, query } from './db.js';
+
+/** Bulk multi-row INSERT (chunked). Returns inserted ids when `returningId` is true. */
+async function bulkInsert(table: string, cols: string[], rows: unknown[][], returningId = false): Promise<number[]> {
+  const ids: number[] = [];
+  const CHUNK = 500;
+  for (let i = 0; i < rows.length; i += CHUNK) {
+    const chunk = rows.slice(i, i + CHUNK);
+    const values = chunk
+      .map((r, ri) => `(${r.map((_, ci) => `$${ri * cols.length + ci + 1}`).join(', ')})`)
+      .join(', ');
+    const sql = `INSERT INTO ${table} (${cols.join(', ')}) VALUES ${values}${returningId ? ' RETURNING id' : ''}`;
+    const inserted = await query<{ id: number }>(sql, chunk.flat());
+    if (returningId) ids.push(...inserted.map((r) => Number(r.id)));
+  }
+  return ids;
+}
 
 function todayPlus(days: number): string {
   const d = new Date();
@@ -11,18 +27,21 @@ function rand<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-export function seed() {
-  migrate();
-  const userCount = db.prepare('SELECT COUNT(*) AS c FROM users').get() as { c: number };
-  if (userCount.c > 0) {
+export async function seed() {
+  await migrate();
+  const userCount = await one<{ c: string }>('SELECT COUNT(*)::INT AS c FROM users');
+  if (Number(userCount?.c ?? 0) > 0) {
     console.log('Database already seeded, skipping.');
     return;
   }
   console.log('Seeding database...');
 
-  const insertUser = db.prepare('INSERT INTO users (name, email, password, is_admin) VALUES (?, ?, ?, ?)');
-  insertUser.run('Admin User', 'admin@rexcinemas.com', bcrypt.hashSync('password', 10), 1);
-  insertUser.run('Regular User', 'user@example.com', bcrypt.hashSync('password', 10), 0);
+  await insert('INSERT INTO users (name, email, password, is_admin) VALUES ($1, $2, $3, $4) RETURNING id', [
+    'Admin User', 'admin@rexcinemas.com', bcrypt.hashSync('password', 10), 1,
+  ]);
+  await insert('INSERT INTO users (name, email, password, is_admin) VALUES ($1, $2, $3, $4) RETURNING id', [
+    'Regular User', 'user@example.com', bcrypt.hashSync('password', 10), 0,
+  ]);
 
   // Real catalog mirrored from VOX Cinemas Egypt (titles, ratings, synopses,
   // posters, release dates). Posters are downloaded locally (see README).
@@ -108,34 +127,17 @@ export function seed() {
     'Avengers: Doomsday': 'https://www.youtube.com/watch?v=irVNGjRFZGk',
     'Children of Blood and Bone': 'https://www.youtube.com/watch?v=4QYESVJkyuc',
   };
-  const insertMovie = db.prepare(
-    'INSERT INTO movies (title, description, duration, poster_path, trailer_url, genre, rating, status, release_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
+  const movieIds = await bulkInsert(
+    'movies',
+    ['title', 'description', 'duration', 'poster_path', 'trailer_url', 'genre', 'rating', 'status', 'release_date'],
+    movies.map((m) => [m.title, m.description, m.duration, m.poster_path, TRAILERS[m.title] ?? m.trailer_url, m.genre, m.rating, m.status, m.release_date]),
+    true
   );
-  const movieIds: number[] = [];
-  for (const m of movies) {
-    const r = insertMovie.run(m.title, m.description, m.duration, m.poster_path, TRAILERS[m.title] ?? m.trailer_url, m.genre, m.rating, m.status, m.release_date);
-    movieIds.push(Number(r.lastInsertRowid));
-  }
-  db.exec(`UPDATE movies SET language = 'Arabic' WHERE title IN (
+  await query(`UPDATE movies SET language = 'Arabic' WHERE title IN (
     'Red Flag', 'Mahmoud El Tany', 'El Gawahergy', 'Khali Balak Min Nafsik', 'Shish Dou', 'Wala Kan Ala El-Bal'
   )`);
-  db.exec(`UPDATE movies SET language = 'Japanese' WHERE title = 'Godzilla Minus Zero'`);
+  await query(`UPDATE movies SET language = 'Japanese' WHERE title = 'Godzilla Minus Zero'`);
 
-  const insertSeat = db.prepare('INSERT INTO seats (row, number, hall_id) VALUES (?, ?, ?)');
-  const hallSeats = new Map<number, number[]>();
-  const addSeats = (hallId: number, rows: string[], perRow: number) => {
-    const ids: number[] = [];
-    for (const row of rows) {
-      for (let n = 1; n <= perRow; n++) {
-        const r = insertSeat.run(row, n, hallId);
-        ids.push(Number(r.lastInsertRowid));
-      }
-    }
-    hallSeats.set(hallId, ids);
-  };
-
-  const insertCinema = db.prepare('INSERT INTO cinemas (name, city, address) VALUES (?, ?, ?)');
-  const insertHall = db.prepare('INSERT INTO halls (cinema_id, name, format) VALUES (?, ?, ?)');
   const cinemaIds: number[] = [];
   const hallInfo: { id: number; format: string; cinema_id: number }[] = [];
   const locations = [
@@ -148,22 +150,42 @@ export function seed() {
     { name: 'IMAX Hall', format: 'IMAX', rows: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'], perRow: 12 },
     { name: 'GOLD Lounge', format: 'GOLD', rows: ['A', 'B', 'C', 'D', 'E'], perRow: 8 },
   ];
+  const seatRows: unknown[][] = [];
+  const hallSeats = new Map<number, number[]>();
   for (const loc of locations) {
-    const c = insertCinema.run(loc.name, loc.city, loc.address);
-    const cid = Number(c.lastInsertRowid);
+    const cid = await insert('INSERT INTO cinemas (name, city, address) VALUES ($1, $2, $3) RETURNING id', [
+      loc.name, loc.city, loc.address,
+    ]);
     cinemaIds.push(cid);
     for (const plan of hallPlans) {
-      const h = insertHall.run(cid, plan.name, plan.format);
-      const hid = Number(h.lastInsertRowid);
+      const hid = await insert('INSERT INTO halls (cinema_id, name, format) VALUES ($1, $2, $3) RETURNING id', [
+        cid, plan.name, plan.format,
+      ]);
       hallInfo.push({ id: hid, format: plan.format, cinema_id: cid });
-      addSeats(hid, plan.rows, plan.perRow);
+      const ids: number[] = [];
+      for (const row of plan.rows) {
+        for (let n = 1; n <= plan.perRow; n++) {
+          seatRows.push([row, n, hid]);
+          ids.push(-1); // placeholder, replaced below
+        }
+      }
+      hallSeats.set(hid, ids);
+    }
+  }
+  // Bulk-insert seats, then map generated ids back per hall (insert order preserved)
+  const seatIds = await bulkInsert('seats', ['"row"', 'number', 'hall_id'], seatRows, true);
+  {
+    let cursor = 0;
+    for (const h of hallInfo) {
+      const count = hallSeats.get(h.id)!.length;
+      hallSeats.set(h.id, seatIds.slice(cursor, cursor + count));
+      cursor += count;
     }
   }
 
   const times = ['10:00', '12:30', '15:00', '17:30', '20:00', '22:30'];
-  const insertShow = db.prepare('INSERT INTO showtimes (movie_id, hall_id, date, time) VALUES (?, ?, ?, ?)');
-  const showIds: number[] = [];
-  const showHall = new Map<number, number>();
+  const showRows: unknown[][] = [];
+  const showHallIds: number[] = [];
   const currentIds = movieIds.slice(0, 20);
   // Each cinema programs its halls: the catalog is split across halls so every
   // movie plays somewhere (Standard takes the first block, IMAX/GOLD the rest)
@@ -176,23 +198,17 @@ export function seed() {
         for (let d = -2; d < 7; d++) {
           const count = 3 + Math.floor(Math.random() * 2);
           for (const t of times.slice(0, count)) {
-            const r = insertShow.run(movieId, hall.id, todayPlus(d), t);
-            const sid = Number(r.lastInsertRowid);
-            showIds.push(sid);
-            showHall.set(sid, hall.id);
+            showRows.push([movieId, hall.id, todayPlus(d), t]);
+            showHallIds.push(hall.id);
           }
         }
       }
     });
   }
+  const showIds = await bulkInsert('showtimes', ['movie_id', 'hall_id', 'date', 'time'], showRows, true);
+  const showHall = new Map<number, number>();
+  showIds.forEach((sid, i) => showHall.set(sid, showHallIds[i]));
 
-  const insertBooking = db.prepare(
-    "INSERT INTO bookings (user_id, showtime_id, subtotal, booking_fee, tax_amount, total_price, status, payment_status, payment_method, transaction_id, booking_reference, check_in_token, paid_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-  );
-  const insertBS = db.prepare('INSERT INTO booking_seats (booking_id, seat_id) VALUES (?, ?)');
-  const insertPayment = db.prepare(
-    "INSERT INTO payments (booking_id, amount, payment_method, transaction_id, card_last_four, status) VALUES (?, ?, ?, ?, ?, 'completed')"
-  );
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   const ref = () => 'REX' + Array.from({ length: 8 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
   for (let i = 0; i < 6; i++) {
@@ -208,30 +224,40 @@ export function seed() {
     const chars2 = 'abcdefghijklmnopqrstuvwxyz0123456789';
     const token = Array.from({ length: 24 }, () => chars2[Math.floor(Math.random() * chars2.length)]).join('');
     const total = Math.round((subtotal + fee + tax) * 100) / 100;
-    const b = insertBooking.run(
-      userId, showId, subtotal, fee, tax, total,
-      paid ? 'confirmed' : rand(['pending', 'confirmed']),
-      paid ? 'paid' : 'pending',
-      paid ? rand(['credit_card', 'paypal']) : null,
-      paid ? `TXN${Date.now()}${i}` : null,
-      ref(),
-      token,
-      paid ? new Date().toISOString() : null
+    const bid = await insert(
+      'INSERT INTO bookings (user_id, showtime_id, subtotal, booking_fee, tax_amount, total_price, status, payment_status, payment_method, transaction_id, booking_reference, check_in_token, paid_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING id',
+      [
+        userId, showId, subtotal, fee, tax, total,
+        paid ? 'confirmed' : rand(['pending', 'confirmed']),
+        paid ? 'paid' : 'pending',
+        paid ? rand(['credit_card', 'paypal']) : null,
+        paid ? `TXN${Date.now()}${i}` : null,
+        ref(),
+        token,
+        paid ? new Date().toISOString() : null,
+      ]
     );
-    const bid = Number(b.lastInsertRowid);
     for (const s of picked) {
-      try { insertBS.run(bid, s); } catch { /* ignore dup */ }
+      try { await query('INSERT INTO booking_seats (booking_id, seat_id) VALUES ($1, $2)', [bid, s]); } catch { /* ignore dup */ }
     }
-    if (paid) insertPayment.run(bid, total, i % 2 ? 'paypal' : 'credit_card', `TXN${Date.now()}${i}`, i % 2 ? null : '4242');
+    if (paid) {
+      await query(
+        "INSERT INTO payments (booking_id, amount, payment_method, transaction_id, card_last_four, status) VALUES ($1, $2, $3, $4, $5, 'completed')",
+        [bid, total, i % 2 ? 'paypal' : 'credit_card', `TXN${Date.now()}${i}`, i % 2 ? null : '4242']
+      );
+    }
   }
 
-  const insertSetting = db.prepare('INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?)');
-  insertSetting.run('site_name', 'REX Cinemas');
-  insertSetting.run('contact_email', 'info@rexcinemas.com');
-  insertSetting.run('phone_number', '+123 456 7890');
-  insertSetting.run('address', 'Dubai, UAE');
-  insertSetting.run('booking_fee', '0');
-  insertSetting.run('tax_rate', '5');
+  for (const [k, v] of [
+    ['site_name', 'REX Cinemas'],
+    ['contact_email', 'info@rexcinemas.com'],
+    ['phone_number', '+123 456 7890'],
+    ['address', 'Dubai, UAE'],
+    ['booking_fee', '0'],
+    ['tax_rate', '5'],
+  ] as [string, string][]) {
+    await query('INSERT INTO settings (key, value) VALUES ($1, $2) ON CONFLICT (key) DO NOTHING', [k, v]);
+  }
 
   console.log('Seeding complete.');
 }
@@ -242,16 +268,16 @@ export function seed() {
  * When the schedule runs dry, regenerate the next 7 days from the current
  * catalog. Safe to run on every startup — a no-op when future shows exist.
  */
-export function ensureFutureShowtimes() {
-  const future = (db.prepare("SELECT COUNT(*) c FROM showtimes WHERE date >= date('now')").get() as { c: number }).c;
-  if (Number(future) > 0) return;
+export async function ensureFutureShowtimes() {
+  const today = new Date().toISOString().slice(0, 10);
+  const future = await one<{ c: string }>('SELECT COUNT(*)::INT AS c FROM showtimes WHERE date >= $1', [today]);
+  if (Number(future?.c ?? 0) > 0) return;
 
-  const movies = db.prepare("SELECT id FROM movies WHERE status = 'current' ORDER BY id").all() as { id: number }[];
-  const halls = db.prepare('SELECT id, cinema_id FROM halls ORDER BY cinema_id, id').all() as { id: number; cinema_id: number }[];
+  const movies = await query<{ id: number }>("SELECT id FROM movies WHERE status = 'current' ORDER BY id");
+  const halls = await query<{ id: number; cinema_id: number }>('SELECT id, cinema_id FROM halls ORDER BY cinema_id, id');
   if (movies.length === 0 || halls.length === 0) return;
 
   const times = ['10:00', '12:30', '15:00', '17:30', '20:00', '22:30'];
-  const ins = db.prepare('INSERT INTO showtimes (movie_id, hall_id, date, time) VALUES (?, ?, ?, ?)');
   const byCinema = new Map<number, number[]>();
   for (const h of halls) {
     const arr = byCinema.get(h.cinema_id) ?? [];
@@ -264,19 +290,19 @@ export function ensureFutureShowtimes() {
     t.setDate(t.getDate() + off);
     return t.toISOString().slice(0, 10);
   };
-  let created = 0;
+  const rows: unknown[][] = [];
   for (const [, hallIds] of byCinema) {
     const perHall = Math.ceil(movies.length / hallIds.length);
     hallIds.forEach((hallId, hi) => {
       for (const m of movies.slice(hi * perHall, hi * perHall + perHall)) {
         for (let day = 0; day < 7; day++) {
           for (const t of times.slice(0, 3)) {
-            ins.run(m.id, hallId, iso(day), t);
-            created++;
+            rows.push([m.id, hallId, iso(day), t]);
           }
         }
       }
     });
   }
-  console.log(`Schedule was empty — generated ${created} showtimes for the next 7 days.`);
+  await bulkInsert('showtimes', ['movie_id', 'hall_id', 'date', 'time'], rows);
+  console.log(`Schedule was empty — generated ${rows.length} showtimes for the next 7 days.`);
 }

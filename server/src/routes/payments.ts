@@ -1,24 +1,27 @@
 import { Router } from 'express';
-import { db } from '../config/db.js';
+import { insert, one, query, run } from '../config/db.js';
 import { auth, AuthRequest } from '../middleware/auth.js';
 
 const router = Router();
 
-router.get('/', auth, (req: AuthRequest, res) => {
-  const rows = db.prepare(
+router.get('/', auth, async (req: AuthRequest, res) => {
+  const rows = await query(
     `SELECT p.*, m.title AS movie_title FROM payments p
      JOIN bookings b ON b.id = p.booking_id
      JOIN showtimes s ON s.id = b.showtime_id
      JOIN movies m ON m.id = s.movie_id
-     WHERE b.user_id = ? ORDER BY p.id DESC`
-  ).all(req.user!.id);
+     WHERE b.user_id = $1 ORDER BY p.id DESC`,
+    [req.user!.id]
+  );
   res.json({ payments: rows });
 });
 
-router.post('/process', auth, (req: AuthRequest, res) => {
+router.post('/process', auth, async (req: AuthRequest, res) => {
   const { booking_id, payment_method, card_number, card_name, expiry_date, cvv } = req.body as Record<string, unknown>;
   const errors: Record<string, string[]> = {};
-  const booking = (booking_id ? db.prepare('SELECT * FROM bookings WHERE id = ?').get(booking_id as number) : null) as Record<string, unknown> | null;
+  const booking = booking_id
+    ? await one<Record<string, unknown>>('SELECT * FROM bookings WHERE id = $1', [booking_id as number])
+    : null;
   if (!booking) errors.booking_id = ['Valid booking is required'];
   if (payment_method !== 'credit_card' && payment_method !== 'paypal') errors.payment_method = ['Payment method must be credit_card or paypal'];
   if (payment_method === 'credit_card') {
@@ -35,7 +38,7 @@ router.post('/process', auth, (req: AuthRequest, res) => {
   if ((booking as Record<string, unknown>).payment_status === 'paid') {
     return res.status(422).json({ message: 'This booking has already been paid' });
   }
-  if (db.prepare('SELECT id FROM payments WHERE booking_id = ?').get(booking_id as number)) {
+  if (await one('SELECT id FROM payments WHERE booking_id = $1', [booking_id as number])) {
     return res.status(422).json({ message: 'Payment already processed for this booking' });
   }
 
@@ -44,13 +47,14 @@ router.post('/process', auth, (req: AuthRequest, res) => {
   const bid = Number(booking_id);
   const amount = Number((booking as Record<string, unknown>).total_price);
   const method = String(payment_method);
-  const r = db.prepare(
-    "INSERT INTO payments (booking_id, amount, payment_method, transaction_id, card_last_four, status) VALUES (?, ?, ?, ?, ?, 'completed')"
-  ).run(bid, amount, method, txn, lastFour);
-  db.prepare("UPDATE bookings SET payment_status='paid', payment_method=?, transaction_id=?, paid_at=datetime('now'), status='confirmed', updated_at=datetime('now') WHERE id=?").run(
-    method, txn, bid
+  const pid = await insert(
+    "INSERT INTO payments (booking_id, amount, payment_method, transaction_id, card_last_four, status) VALUES ($1, $2, $3, $4, $5, 'completed') RETURNING id",
+    [bid, amount, method, txn, lastFour]
   );
-  const payment = db.prepare('SELECT * FROM payments WHERE id = ?').get(Number(r.lastInsertRowid));
+  await run("UPDATE bookings SET payment_status='paid', payment_method=$1, transaction_id=$2, paid_at=NOW(), status='confirmed', updated_at=NOW() WHERE id=$3", [
+    method, txn, bid,
+  ]);
+  const payment = await one('SELECT * FROM payments WHERE id = $1', [pid]);
   res.json({ payment, message: 'Payment processed successfully!' });
 });
 

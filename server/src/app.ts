@@ -14,14 +14,14 @@ import adminRoutes from './routes/admin.js';
 import holdRoutes from './routes/holds.js';
 import cinemaRoutes from './routes/cinemas.js';
 import { auth, AuthRequest } from './middleware/auth.js';
-import { db } from './config/db.js';
+import { query } from './config/db.js';
 
 dotenv.config();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-migrate();
-seed();
-ensureFutureShowtimes();
+await migrate();
+await seed();
+await ensureFutureShowtimes();
 
 export const app = express();
 app.use(cors({ origin: process.env.CLIENT_URL?.split(',') ?? true, credentials: true }));
@@ -41,18 +41,20 @@ app.use('/api/cinemas', cinemaRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/admin', adminRoutes);
 
-app.get('/api/dashboard', auth, (req: AuthRequest, res) => {
+app.get('/api/dashboard', auth, async (req: AuthRequest, res) => {
   const today = new Date().toISOString().slice(0, 10);
-  const upcoming = db.prepare(
+  const upcoming = await query(
     `SELECT b.*, m.title AS movie_title, m.poster_path AS poster_path, s.date AS show_date, s.time AS show_time
      FROM bookings b JOIN showtimes s ON s.id=b.showtime_id JOIN movies m ON m.id=s.movie_id
-     WHERE b.user_id = ? AND s.date >= ? ORDER BY s.date, s.time LIMIT 5`
-  ).all(req.user!.id, today);
-  const history = db.prepare(
+     WHERE b.user_id = $1 AND s.date >= $2 ORDER BY s.date, s.time LIMIT 5`,
+    [req.user!.id, today]
+  );
+  const history = await query(
     `SELECT b.*, m.title AS movie_title, m.poster_path AS poster_path, s.date AS show_date, s.time AS show_time
      FROM bookings b JOIN showtimes s ON s.id=b.showtime_id JOIN movies m ON m.id=s.movie_id
-     WHERE b.user_id = ? AND s.date < ? ORDER BY s.date DESC LIMIT 10`
-  ).all(req.user!.id, today);
+     WHERE b.user_id = $1 AND s.date < $2 ORDER BY s.date DESC LIMIT 10`,
+    [req.user!.id, today]
+  );
   res.json({ upcomingBookings: upcoming, bookingHistory: history });
 });
 
@@ -64,3 +66,5 @@ app.use((err: Error, _req: express.Request, res: express.Response, _next: expres
   console.error(err);
   res.status(500).json({ message: 'Something went wrong' });
 });
+
+export default app;
