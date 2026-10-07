@@ -14,29 +14,37 @@ import { Pool } from 'pg';
  *                    Supabase always requires TLS (default: enabled).
  *   DB_POOL_MAX    — max pool clients (default 10; use 1-2 on serverless).
  */
-const connectionString = process.env.DATABASE_URL;
-if (!connectionString) {
-  throw new Error(
-    'DATABASE_URL is not set. Add your Supabase connection string to server/.env ' +
-      '(and to Vercel → Environment Variables for deploys).'
-  );
+function createPool(): Pool {
+  const connectionString = process.env.DATABASE_URL;
+  if (!connectionString) {
+    throw new Error(
+      'DATABASE_URL is not set. Add your Supabase connection string to server/.env ' +
+        '(and to Vercel → Environment Variables for deploys).'
+    );
+  }
+  const sslOff = (process.env.DB_SSL || '').toLowerCase() === 'disable';
+  const pool = new Pool({
+    connectionString,
+    ssl: sslOff ? false : { rejectUnauthorized: false },
+    max: Number(process.env.DB_POOL_MAX || 10) || 10,
+  });
+  pool.on('error', (err) => {
+    console.error('[db] unexpected pool error', err);
+  });
+  return pool;
 }
 
-const sslOff = (process.env.DB_SSL || '').toLowerCase() === 'disable';
-
-export const pool = new Pool({
-  connectionString,
-  ssl: sslOff ? false : { rejectUnauthorized: false },
-  max: Number(process.env.DB_POOL_MAX || 10) || 10,
-});
-
-pool.on('error', (err) => {
-  console.error('[db] unexpected pool error', err);
-});
+// Lazy init: keeps `/api/health` (and other non-DB paths) alive even when the
+// database is misconfigured, so the real error is visible instead of a blank 500.
+let _pool: Pool | null = null;
+export function poolOrThrow(): Pool {
+  if (!_pool) _pool = createPool();
+  return _pool;
+}
 
 /** Run a query, return all rows. */
 export async function query<T = Record<string, unknown>>(text: string, params: unknown[] = []): Promise<T[]> {
-  const res = await pool.query(text, params as never[]);
+  const res = await poolOrThrow().query(text, params as never[]);
   return res.rows as T[];
 }
 
@@ -48,7 +56,7 @@ export async function one<T = Record<string, unknown>>(text: string, params: unk
 
 /** Run an INSERT/UPDATE/DELETE, return affected row count. */
 export async function run(text: string, params: unknown[] = []): Promise<number> {
-  const res = await pool.query(text, params as never[]);
+  const res = await poolOrThrow().query(text, params as never[]);
   return Number(res.rowCount ?? 0);
 }
 

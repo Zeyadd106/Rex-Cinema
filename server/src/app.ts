@@ -19,9 +19,15 @@ import { query } from './config/db.js';
 dotenv.config();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-await migrate();
-await seed();
-await ensureFutureShowtimes();
+try {
+  await migrate();
+  await seed();
+  await ensureFutureShowtimes();
+} catch (err) {
+  // Don't crash the function: /api/health reports the problem, and init
+  // reties on the next cold start. Per-request DB errors still propagate.
+  console.error('[db] startup init failed:', err);
+}
 
 export const app = express();
 app.use(cors({ origin: process.env.CLIENT_URL?.split(',') ?? true, credentials: true }));
@@ -31,7 +37,19 @@ if (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME) {
   app.use('/uploads', express.static('/tmp/uploads'));
 }
 
-app.get('/api/health', (_req, res) => res.json({ ok: true, app: 'REX Cinemas API' }));
+app.get('/api/health', async (_req, res) => {
+  try {
+    await query('SELECT 1');
+    return res.json({ ok: true, app: 'REX Cinemas API', db: 'connected' });
+  } catch (err) {
+    return res.status(500).json({
+      ok: false,
+      app: 'REX Cinemas API',
+      db: 'error',
+      message: err instanceof Error ? err.message : String(err),
+    });
+  }
+});
 app.use('/api/auth', authRoutes);
 app.use('/api/movies', movieRoutes);
 app.use('/api/showtimes', showtimeRoutes);
