@@ -7,8 +7,7 @@
     },
     "server": {
       "root": "server/",
-      "framework": "express",
-      "runtime": "nodejs22.x"
+      "framework": "express"
     }
   },
   "rewrites": [
