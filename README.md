@@ -1,104 +1,81 @@
-# REX Cinemas
+# Rex Cinema Tech
 
-Movie ticket booking platform — migrated from Laravel/Blade to a modern TypeScript full-stack app.
+Cinema discovery & ticket-booking web app — fully rewritten as a production-ready Next.js application.
 
-- **Frontend:** React 19 + TypeScript + Tailwind CSS 4 (Vite) — `client/`
-- **Backend:** Node.js + Express + TypeScript + SQLite (`node:sqlite`) + JWT auth — `server/`
+- **Framework:** Next.js 16 (App Router, Turbopack) + React 19 + TypeScript (strict)
+- **Styling:** Tailwind CSS 4 (`@theme` tokens in `app/globals.css`)
+- **i18n:** next-intl — English + Arabic with full RTL (`localePrefix: 'as-needed'`)
+- **Motion/Icons:** framer-motion, lucide-react
+- **Data:** file-backed JSON store (`data/db.json`, seeded from `data/movies.json`) behind repository modules in `lib/` — swap in a real database without touching the UI
 
 ## Features
 
-- **Real Egypt cinema catalog**: 20 now-showing + 18 coming-soon titles mirrored from egy.voxcinemas.com (titles, Egyptian age ratings, synopses, posters stored locally, release dates), programmed across all cinemas and halls
+- **No customer accounts** — browse, book and look up tickets without registering (state persists in `localStorage`)
+- **Catalog**: 20 now-showing + 18 coming-soon titles (Egyptian cinema), 3 cinemas × 3 screens (Standard / IMAX / GOLD) with automatic rolling showtimes
+- **Booking flow**: Home → Movies → Movie details (showtimes by date) → Book (movie/cinema/date/showtime/seats) → Booking details → Payment → Confirmation (printable e-ticket)
+- **Interactive seat map**: live availability, occupied/disabled seats, 10-seat cap, server-side seat re-validation on every booking
+- **Pricing**: subtotal / booking fee / tax / total with server-side quoting (`GET /api/quote`)
+- **Mock payment**: validated entirely server-side — test card `4242 4242 4242 4242`
+- **Booking dashboard**: current draft + recent bookings on the device, no login
+- **Admin panel** (`/admin`): stats overview, movie CRUD, showtime CRUD, booking management with status changes, read-only seat inspector
+- **Bilingual (EN/AR)** with RTL layouts, locale-aware dates/times/currency
+- **SEO/metadata** per page, custom 404/error pages, keyboard focus styles, `prefers-reduced-motion` support, print styles for tickets
 
-- **Multi-cinema**: browse cinemas (Mall of Egypt, City Centre Almaza, City Centre Alexandria), each with its own halls (Standard / IMAX / GOLD), seat layouts and programming
-- Header like voxcinemas.com: utility bar (search overlay, Login/Sign-Up, Egypt locale, EN/AR toggle with RTL), dropdown nav (Movies, Food & Drinks, Ways to Watch, Offers), cinema strip with Find Times shortcut, mobile flyout menu
-- Header cinema picker (persisted) + homepage **"Find Times and Book"** widget: cinema + movie + date → grouped showtimes with format/hall labels
-- Browse now-showing & coming-soon movies, search, movie details with trailer + showtimes filtered by cinema
-- Movie page like voxcinemas.com: title + rating badge + Facebook/X share, poster + trailer hero, metadata aside (genre/runtime/release/starring/language/subtitles), Today/Tomorrow date tabs, showtimes grouped by cinema → format, recommendations, Now Showing / Coming Soon shortcuts
-- Seat selection (A–G × 10) with live availability, $12/ticket booking flow
-- **Seat holds with expiry**: seats are held for 10 minutes (`HOLD_TTL_MINUTES`) while you check out; expired holds auto-release, double-holds are rejected
-- **Real fee & tax pricing**: booking fee + tax rate from Admin → Settings are applied to every booking with a line-item breakdown (subtotal / fee / tax / total)
-- Simulated credit-card / PayPal checkout, e-ticket confirmation page
-- **QR e-tickets + usher check-in**: each paid booking gets a signed QR code; Admin → Check-in validates tickets and prevents reuse
-- Auth (register/login, JWT), user dashboard (upcoming/history), my bookings, cancel
-- Admin panel: stats dashboard, movie CRUD with poster upload, **cinema & hall management (auto seat-layout generation)**, showtime CRUD per hall, all bookings, user management (toggle admin), ticket check-in, site settings
-
-## Prerequisites
-
-- Node.js 22.5+ (uses built-in `node:sqlite`; tested on Node 24)
-- npm
-
-## Run from a fresh terminal
+## Getting started
 
 ```bash
-# 1. install everything (root helper installs server + client)
-npm run install:all
-
-# 2. configure backend (optional — works out of the box with defaults)
-copy server\.env.example server\.env   # Windows
-# cp server/.env.example server/.env   # macOS/Linux
-
-# 3. start both servers together
-npm run dev
+npm install
+npm run dev        # http://localhost:3000
 ```
-
-- API: http://localhost:4000 (`/api/health`)
-- App: http://localhost:5173
-
-The SQLite database (`server/data/vox.db`) is created and seeded automatically on first start.
-
-### Seed accounts
-
-| Role  | Email                  | Password   |
-| ----- | ---------------------- | ---------- |
-| Admin | admin@rexcinemas.com   | password   |
-| User  | user@example.com       | password   |
-
-### Other commands
 
 ```bash
-npm run build       # build server (tsc) + client (tsc + vite)
-npm run typecheck   # typecheck both workspaces
-npm run start       # run the built backend (serve client/dist separately)
+npm run build      # production build (also runs TypeScript checks)
+npm start          # serve the production build
+npm run typecheck  # tsc --noEmit
 ```
 
-To run servers individually: `npm run dev:server` (port 4000), `npm run dev:client` (port 5173, proxies `/api` + `/uploads` to the backend).
+Configuration: `.env.example` → copy to `.env` (only `NEXT_PUBLIC_SITE_URL` is used, for metadata).
+
+The database `data/db.json` is created and seeded automatically on first run (git-ignored; delete it to re-seed).
 
 ## Project structure
 
 ```
-├── client/            # React + TS + Tailwind (Vite)
-│   ├── src/
-│   │   ├── components/  # Layout, MovieCard, SeatMap, ProtectedRoute
-│   │   ├── pages/       # Home, Movies, MovieDetail, ComingSoon, Login,
-│   │   │                # Register, Dashboard, BookMovie, Bookings,
-│   │   │                # BookingDetail, Payment, Confirmation, admin/*
-│   │   ├── context/     # AuthContext (JWT)
-│   │   ├── services/    # axios api client
-│   │   ├── App.tsx / main.tsx / types.ts / index.css
-│   └── public/          # logo.png
-├── server/            # Node + Express + TS + SQLite
-│   ├── src/
-│   │   ├── routes/      # auth, movies, showtimes, bookings, payments, admin
-│   │   ├── middleware/  # auth (JWT), admin
-│   │   ├── config/      # db (schema), seed
-│   │   ├── utils/       # jwt, booking refs
-│   │   ├── app.ts / server.ts
-│   ├── uploads/posters/ # uploaded movie posters (served statically)
-│   └── data/            # vox.db (auto-created + seeded)
-├── .env.example
-└── package.json         # root orchestration scripts
+app/[locale]/          # en/ + ar/ route tree (root layout, RTL, providers)
+  (site)/              # public site: home, movies, coming-soon, booking flow, dashboard
+  admin/               # admin shell + pages (own layout)
+app/api/               # REST route handlers (movies, showtimes, cinemas, seats,
+                       # bookings, quote, admin/stats)
+components/            # shared UI (Navbar, MovieCard, SeatMap, BookingSummary, …)
+components/admin/      # admin-only UI
+context/               # BookingContext (draft + recent refs in localStorage)
+i18n/                  # next-intl routing/request/navigation config
+lib/                   # repository + domain logic (storage, pricing, validation)
+messages/              # en.json / ar.json (336 keys, mirrored)
+data/                  # movies.json seed, db.json runtime store
+public/logo.png        # brand logo (used across the app)
+proxy.ts               # next-intl locale middleware
 ```
 
 ## API overview
 
-All endpoints are JSON under `/api`:
+| Method | Route | Purpose |
+| ------ | ----- | ------- |
+| GET/POST | `/api/movies` | list/filter, create |
+| GET/PUT/DELETE | `/api/movies/[id]` | read, update, delete |
+| GET/POST | `/api/showtimes` | list (movie/cinema/date filters), create |
+| GET/PUT/DELETE | `/api/showtimes/[id]` | read, update, delete |
+| GET | `/api/cinemas` | cinemas + screens |
+| GET | `/api/seats` | seat map for a showtime (`?showtimeId=`) or screen (`?hallId=`) |
+| GET | `/api/quote` | price quote (`?seats=`) |
+| GET/POST | `/api/bookings` | lookup (by reference/search), create (server-validated) |
+| GET/PATCH | `/api/bookings/[id]` | read, change status |
+| GET | `/api/admin/stats` | admin overview stats |
 
-- `POST /auth/register|/login`, `GET /auth/me`
-- `GET /movies?status=`, `GET /movies/:id`, `POST /movies/:id/notify`, admin `POST|PUT|DELETE /movies`
-- `GET /showtimes?cinema_id=&movie_id=&date=`, `GET /movies/:id/showtimes` (alias `/showtimes/movie/:id`), auth `GET /showtimes/:id/seats` (hall-scoped), admin `POST|PUT|DELETE /showtimes` (hall required)
-- `GET /cinemas`, `GET /cinemas/:id` (halls + now playing + showtimes), `GET /cinemas/halls?cinema_id=`, admin `POST|PUT|DELETE /cinemas`, `POST|PUT|DELETE /cinemas/halls`
-- Auth `GET|POST /bookings`, `GET /bookings/:id`, `GET /bookings/:id/ticket` (QR payload), `DELETE /bookings/:id/cancel`, `DELETE /bookings/:id`
-- Auth `POST /holds`, `GET /holds/:token`, `DELETE /holds/:token` (seat holds with expiry + price quote)
-- Auth `GET /payments`, `POST /payments/process`
-- Auth `GET /dashboard` (upcoming/history)
-- Admin `GET /admin/stats|/users|/settings|/dashboard`, `PATCH /admin/users/:id/toggle-admin`, `PUT|DELETE /admin/users/:id`, `PUT /admin/settings`, `POST /admin/check-in` (ticket validation)
+Errors return `{ message?, errors?: { field: [code] } }`; the client maps codes to translated messages in the `validation.*` namespace.
+
+## Notes / future work
+
+- **Admin auth is not wired up yet** (`admin.authNote` in the UI says so) — hook the `/admin` area to your identity provider when ready.
+- Payment is a demo/validation layer; replace `createBooking`'s `payment` handling with a real provider (keep secrets server-side).
+- Storage is intentionally isolated behind `lib/store.ts` + repository functions in `lib/*.ts` so a real database can be dropped in later.

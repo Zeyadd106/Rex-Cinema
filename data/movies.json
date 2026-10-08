@@ -1,0 +1,769 @@
+[
+  {
+    "id": "red-flag",
+    "title": "Red Flag",
+    "description": "A flight attendant poses as a commercial captain to charm women. When he falls in love with Habiba, he decides to settle down. Due to tight flight shifts, he grants his father a power of attorney to execute the wedding contract — only to end up married to four women simultaneously! When his father suffers temporary amnesia, Hesham embarks on a race against time to untangle the three extra marriages before Habiba discovers the chaos.",
+    "poster": "/uploads/posters/vox-red-flag.jpg",
+    "genre": [
+      "Comedy"
+    ],
+    "duration": "TBA",
+    "rating": "12+",
+    "releaseDate": "2026-09-01",
+    "status": "now-showing",
+    "language": "Arabic",
+    "director": null,
+    "cast": [],
+    "trailerUrl": "https://www.youtube.com/watch?v=Z9xAzR5Owdw",
+    "featured": true
+  },
+  {
+    "id": "resident-evil",
+    "title": "Resident Evil",
+    "description": "From the mind of visionary filmmaker Zach Cregger (Weapons, Barbarian) comes a thrilling — and terrifying — reinvention of the Resident Evil franchise. In an all-new story, Resident Evil follows Bryan (Austin Abrams), a medical courier who unwittingly finds himself in an action-packed, non-stop race for survival as one fateful, horrifying night collapses around him in chaos.",
+    "poster": "/uploads/posters/vox-resident-evil.jpg",
+    "genre": [
+      "Horror"
+    ],
+    "duration": "TBA",
+    "rating": "18+",
+    "releaseDate": "2026-09-18",
+    "status": "now-showing",
+    "language": "English",
+    "director": "Zach Cregger",
+    "cast": [],
+    "trailerUrl": "https://www.youtube.com/watch?v=UizmmO6Wavw",
+    "featured": true
+  },
+  {
+    "id": "mahmoud-el-tany",
+    "title": "Mahmoud El Tany",
+    "description": "When a polished, high-powered businessman and a quick-witted street hustler discover they share the same name, a bizarre twist of fate forces them to swap lives — leading to chaos, comedy, and an unexpected journey of self-discovery.",
+    "poster": "/uploads/posters/vox-mahmoud-el-tany.jpg",
+    "genre": [
+      "Comedy"
+    ],
+    "duration": "TBA",
+    "rating": "12+",
+    "releaseDate": "2026-07-01",
+    "status": "now-showing",
+    "language": "Arabic",
+    "director": null,
+    "cast": [],
+    "trailerUrl": "https://www.youtube.com/watch?v=eU0f7FPZ2zA",
+    "featured": true
+  },
+  {
+    "id": "spider-man-brand-new-day",
+    "title": "Spider-Man: Brand New Day",
+    "description": "It's a BRAND NEW DAY for Peter Parker. Fighting crime full-time as Spider-Man in a world that doesn't remember him — and the pressure of seeing his old friends move on without him — sparks a change in Peter he may not have the power to control. But that transformation might also be the only thing that can stop a shocking new threat to the city and those he loves — a powerful villain no one can even see.",
+    "poster": "/uploads/posters/vox-spider-man.jpg",
+    "genre": [
+      "Action"
+    ],
+    "duration": "TBA",
+    "rating": "12+",
+    "releaseDate": "2026-07-31",
+    "status": "now-showing",
+    "language": "English",
+    "director": null,
+    "cast": [],
+    "trailerUrl": "https://www.youtube.com/watch?v=62bIsvRcPv0",
+    "featured": true
+  },
+  {
+    "id": "the-odyssey",
+    "title": "The Odyssey",
+    "description": "Christopher Nolan's next film, The Odyssey, is a mythic action epic shot across the world using brand new IMAX film technology. The film brings Homer's foundational saga to IMAX film screens for the first time. Starring Matt Damon, Tom Holland, Anne Hathaway, Robert Pattinson, Lupita Nyong'o, Zendaya and Charlize Theron.",
+    "poster": "/uploads/posters/vox-odyssey.jpg",
+    "genre": [
+      "Adventure"
+    ],
+    "duration": "2h 52m",
+    "rating": "16+",
+    "releaseDate": "2026-07-16",
+    "status": "now-showing",
+    "language": "English",
+    "director": "Christopher Nolan",
+    "cast": [],
+    "trailerUrl": "https://www.youtube.com/watch?v=f_bKjZeJBBI",
+    "featured": true
+  },
+  {
+    "id": "insidious-out-of-the-further",
+    "title": "Insidious: Out Of The Further",
+    "description": "Having earned over $740 million at the global box office, the Insidious franchise returns with a new family and a terror that redefines what The Further is capable of. Gemma, a young mother raising her daughter in the house she grew up in, discovers she can travel into The Further, the purgatorial realm of lost souls. When something evil comes after her, Gemma discovers an ability that changes everything: she doesn't just enter The Further, she can bring what lives there back to the real world.",
+    "poster": "/uploads/posters/vox-insidious.jpg",
+    "genre": [
+      "Horror"
+    ],
+    "duration": "TBA",
+    "rating": "16+",
+    "releaseDate": "2026-08-21",
+    "status": "now-showing",
+    "language": "English",
+    "director": null,
+    "cast": [],
+    "trailerUrl": "https://www.youtube.com/watch?v=jxU8FU3o75A",
+    "featured": true
+  },
+  {
+    "id": "fall-2-deadpoint",
+    "title": "Fall 2: Deadpoint",
+    "description": "Grieving her sister Shiloh's death, Jax Hunter bonds with Shiloh's bold friend Luce. They tackle Mount Kwan's dangerous plank walk in Thailand. When a rockslide traps them on a narrow plank 3000 feet up, Jax must face her fears to survive.",
+    "poster": "/uploads/posters/vox-fall-2.jpg",
+    "genre": [
+      "Thriller"
+    ],
+    "duration": "TBA",
+    "rating": "16+",
+    "releaseDate": "2026-09-04",
+    "status": "now-showing",
+    "language": "English",
+    "director": null,
+    "cast": [],
+    "trailerUrl": "https://www.youtube.com/watch?v=_0A6Bcd02g8",
+    "featured": false
+  },
+  {
+    "id": "practical-magic-2",
+    "title": "Practical Magic 2",
+    "description": "Practical Magic 2 returns to a world steeped in moonlit mischief and powerful ancestral magic, as the Owens sisters must confront the dark curse that threatens to unravel their family once and for all in a must-see cinematic event of fun, magic and mayhem.",
+    "poster": "/uploads/posters/vox-practical-magic-2.jpg",
+    "genre": [
+      "Romance"
+    ],
+    "duration": "TBA",
+    "rating": "16+",
+    "releaseDate": "2026-09-18",
+    "status": "now-showing",
+    "language": "English",
+    "director": "Stewart Lyons",
+    "cast": [],
+    "trailerUrl": "https://www.youtube.com/watch?v=Ho10_4IX1jE",
+    "featured": false
+  },
+  {
+    "id": "el-gawahergy",
+    "title": "El Gawahergy",
+    "description": "After being caught one too many times, Seif, a famous jeweler with a weakness for women, is forced to put his traditional male pride aside. When his strong-willed wife Yasmine insists on building a healthier and more balanced life together, the couple turns to a relationship counselor and embarks on an unconventional therapy program to save their marriage. Instead of bringing them closer, each step unleashes a new wave of hilarious chaos.",
+    "poster": "/uploads/posters/vox-el-gawahergy.jpg",
+    "genre": [
+      "Comedy"
+    ],
+    "duration": "TBA",
+    "rating": "G",
+    "releaseDate": "2026-06-01",
+    "status": "now-showing",
+    "language": "Arabic",
+    "director": null,
+    "cast": [],
+    "trailerUrl": "https://www.youtube.com/watch?v=J9OLBQz21gc",
+    "featured": false
+  },
+  {
+    "id": "tad-and-the-magic-lamp",
+    "title": "Tad and the Magic Lamp",
+    "description": "Oli, Tad's intrepid two-year-old daughter, has turned him into an overprotective father and Mummy feels sidelined. When they find the magic lamp in Buckingham Palace, Mummy asks it to travel back in time to Paititi, Peru, in 1502. Tad, Sara and the whole team will have to follow Mummy into the past, before he changes history… Their journey will take them from Peru to Greece, and deep into the Middle East, all the way to the cave of Ali Baba and the Forty Thieves.",
+    "poster": "/uploads/posters/vox-tad.jpg",
+    "genre": [
+      "Animation"
+    ],
+    "duration": "TBA",
+    "rating": "G",
+    "releaseDate": "2026-08-01",
+    "status": "now-showing",
+    "language": "English",
+    "director": null,
+    "cast": [],
+    "trailerUrl": "https://www.youtube.com/watch?v=8-Bjo_rXCkM",
+    "featured": false
+  },
+  {
+    "id": "khali-balak-min-nafsik",
+    "title": "Khali Balak Min Nafsik",
+    "description": "The story revolves around a couple who face numerous recurring disagreements and problems, leading them to a series of humorous and unexpected situations.",
+    "poster": "/uploads/posters/vox-khali-balak.jpg",
+    "genre": [
+      "Comedy"
+    ],
+    "duration": "1h 45m",
+    "rating": "12+",
+    "releaseDate": "2026-07-22",
+    "status": "now-showing",
+    "language": "Arabic",
+    "director": null,
+    "cast": [
+      "Yasmin Abdulaziz",
+      "Ahmed El Sakka"
+    ],
+    "trailerUrl": "https://www.youtube.com/watch?v=DFwAnHFVGr4",
+    "featured": false
+  },
+  {
+    "id": "the-uprising",
+    "title": "The Uprising",
+    "description": "In plague-ravaged 14th-Century England, a peasant triggers a rebellion against King Richard II and unintentionally becomes a legend of resistance.",
+    "poster": "/uploads/posters/vox-uprising.jpg",
+    "genre": [
+      "Action"
+    ],
+    "duration": "2h 10m",
+    "rating": "16+",
+    "releaseDate": "2026-09-10",
+    "status": "now-showing",
+    "language": "English",
+    "director": null,
+    "cast": [
+      "Jamie Bell",
+      "Andrew Garfield",
+      "Stephen Dillane"
+    ],
+    "trailerUrl": "https://www.youtube.com/watch?v=ZVkrhHebz1Q",
+    "featured": false
+  },
+  {
+    "id": "mutiny",
+    "title": "Mutiny",
+    "description": "After his billionaire industrialist boss is murdered in front of him, Cole Reed is set up to take the fall for the crime — leaving him on the run as he works to uncover an international conspiracy.",
+    "poster": "/uploads/posters/vox-mutiny.jpg",
+    "genre": [
+      "Action"
+    ],
+    "duration": "1h 35m",
+    "rating": "16+",
+    "releaseDate": "2026-08-20",
+    "status": "now-showing",
+    "language": "English",
+    "director": null,
+    "cast": [
+      "Jason Statham",
+      "Annabelle Wallis"
+    ],
+    "trailerUrl": "https://www.youtube.com/watch?v=FKSdXH89jbo",
+    "featured": false
+  },
+  {
+    "id": "coyote-vs-acme",
+    "title": "Coyote VS Acme",
+    "description": "A story set in the ACME warehouse, the manufacturer of anything and everything used by the Looney Tunes characters.",
+    "poster": "/uploads/posters/vox-coyote.jpg",
+    "genre": [
+      "Animation"
+    ],
+    "duration": "1h 40m",
+    "rating": "G",
+    "releaseDate": "2026-08-27",
+    "status": "now-showing",
+    "language": "English",
+    "director": null,
+    "cast": [
+      "John Cena",
+      "Will Forte",
+      "Lana Condor"
+    ],
+    "trailerUrl": "https://www.youtube.com/watch?v=H-43VeYGiPM",
+    "featured": false
+  },
+  {
+    "id": "paw-patrol-the-dino-movie",
+    "title": "Paw Patrol: The Dino Movie",
+    "description": "After their ship gets caught in a mysterious storm, the PAW Patrol pups crash land on an uncharted tropical island filled with dinosaurs. When Mayor Humdinger inadvertently causes a huge, dormant volcano to erupt, the pups are thrown into a series of high-stakes, dino-sized rescues bigger than anything they've done before.",
+    "poster": "/uploads/posters/vox-paw-patrol.jpg",
+    "genre": [
+      "Animation"
+    ],
+    "duration": "1h 30m",
+    "rating": "G",
+    "releaseDate": "2026-08-13",
+    "status": "now-showing",
+    "language": "English",
+    "director": null,
+    "cast": [
+      "McKenna Grace",
+      "Terry Crews"
+    ],
+    "trailerUrl": "https://www.youtube.com/watch?v=CS3_xLd2a2E",
+    "featured": false
+  },
+  {
+    "id": "just-play-dead",
+    "title": "Just Play Dead",
+    "description": "A criminal mastermind (Samuel L. Jackson) plans to fake his death for insurance money while framing his wife's lover. His wife (Eva Green) plots to kill him for real and take it all. Both race to outmaneuver each other in a deadly battle of wits.",
+    "poster": "/uploads/posters/vox-just-play-dead.jpg",
+    "genre": [
+      "Thriller"
+    ],
+    "duration": "1h 35m",
+    "rating": "16+",
+    "releaseDate": "2026-09-17",
+    "status": "now-showing",
+    "language": "English",
+    "director": null,
+    "cast": [
+      "Eva Green",
+      "Samuel L. Jackson"
+    ],
+    "trailerUrl": "https://www.youtube.com/watch?v=LlAajeOoFBo",
+    "featured": false
+  },
+  {
+    "id": "pressure",
+    "title": "Pressure",
+    "description": "In the tense 72 hours before D-Day, and with the fate of the free world hanging in the balance, Pressure follows General Dwight D. Eisenhower and Captain James Stagg as they face an impossible choice — launch the largest and most dangerous seaborne invasion in history or risk losing the war altogether.",
+    "poster": "/uploads/posters/vox-pressure.jpg",
+    "genre": [
+      "Drama"
+    ],
+    "duration": "1h 40m",
+    "rating": "PG12",
+    "releaseDate": "2026-09-17",
+    "status": "now-showing",
+    "language": "English",
+    "director": null,
+    "cast": [
+      "Andrew Scott",
+      "Kerry Condon",
+      "Brendan Fraser"
+    ],
+    "trailerUrl": "https://www.youtube.com/watch?v=xcPgrKoXe_c",
+    "featured": false
+  },
+  {
+    "id": "the-weight",
+    "title": "The Weight",
+    "description": "Desperate to save what is left of his family, during the height of the Great Depression a battle-scarred veteran is hired to help smuggle a fortune in gold across 100 miles of impenetrable wilderness.",
+    "poster": "/uploads/posters/vox-weight.jpg",
+    "genre": [
+      "Action"
+    ],
+    "duration": "1h 55m",
+    "rating": "12+",
+    "releaseDate": "2026-09-17",
+    "status": "now-showing",
+    "language": "English",
+    "director": null,
+    "cast": [
+      "Russell Crowe",
+      "Ethan Hawke"
+    ],
+    "trailerUrl": "https://www.youtube.com/watch?v=7YpuMymmiJ8",
+    "featured": false
+  },
+  {
+    "id": "avengers-endgame-encore",
+    "title": "Avengers Endgame: Encore",
+    "description": "After the devastating events of Avengers: Infinity War (2018), the universe is in ruins. With the help of remaining allies, the Avengers assemble once more in order to reverse Thanos' actions and restore balance to the universe.",
+    "poster": "/uploads/posters/vox-avengers-encore.jpg",
+    "genre": [
+      "Action"
+    ],
+    "duration": "3h 1m",
+    "rating": "12+",
+    "releaseDate": "2026-09-24",
+    "status": "now-showing",
+    "language": "English",
+    "director": "Anthony and Joe Russo",
+    "cast": [
+      "Chris Hemsworth",
+      "Robert Downey Jr",
+      "Chris Evans"
+    ],
+    "trailerUrl": "https://www.youtube.com/watch?v=7pq7jlR0R6o",
+    "featured": false
+  },
+  {
+    "id": "avengers-endgame-encore-infinity-vision",
+    "title": "Avengers Endgame: Encore (Infinity Vision)",
+    "description": "Experience the Avengers finale in Infinity Vision. After the devastating events of Avengers: Infinity War (2018), the universe is in ruins, and the Avengers assemble once more to reverse Thanos' actions and restore balance to the universe.",
+    "poster": "/uploads/posters/vox-avengers-infinity.jpg",
+    "genre": [
+      "Action"
+    ],
+    "duration": "3h 1m",
+    "rating": "12+",
+    "releaseDate": "2026-09-24",
+    "status": "now-showing",
+    "language": "English",
+    "director": "Anthony and Joe Russo",
+    "cast": [
+      "Chris Hemsworth",
+      "Robert Downey Jr",
+      "Chris Evans"
+    ],
+    "trailerUrl": "https://www.youtube.com/watch?v=7pq7jlR0R6o",
+    "featured": false
+  },
+  {
+    "id": "heart-of-the-beast",
+    "title": "Heart of the Beast",
+    "description": "After a harrowing plane crash, Special Forces officer James Belmont (Brad Pitt) and his combat dog, Odin, find themselves stranded deep in the Alaskan wilderness. Together, they are forced into a brutal fight for survival against the elements.",
+    "poster": "/uploads/posters/vox-heart-of-beast.jpg",
+    "genre": [
+      "Adventure"
+    ],
+    "duration": "TBA",
+    "rating": "18TC",
+    "releaseDate": "2026-09-24",
+    "status": "coming-soon",
+    "language": "English",
+    "director": null,
+    "cast": [
+      "Brad Pitt",
+      "J.K Simmons",
+      "Anna Lambe"
+    ],
+    "trailerUrl": "https://www.youtube.com/watch?v=YgHjBQ-q9Es",
+    "featured": false
+  },
+  {
+    "id": "the-smurfs-timeless-adventure-volume-2",
+    "title": "The Smurfs Timeless Adventure Volume 2",
+    "description": "Join the Smurfs in a collection of fun-filled adventures packed with wild inventions, thrilling competitions, teamwork, and chaotic missions. From sports contests to hilarious encounters with Gargamel, the Smurfs discover that friendship and courage always save the day.",
+    "poster": "/uploads/posters/vox-smurfs-2.jpg",
+    "genre": [
+      "Animation"
+    ],
+    "duration": "TBA",
+    "rating": "18TC",
+    "releaseDate": "2026-09-24",
+    "status": "coming-soon",
+    "language": "English",
+    "director": null,
+    "cast": [],
+    "trailerUrl": null,
+    "featured": false
+  },
+  {
+    "id": "shish-dou",
+    "title": "Shish Dou",
+    "description": "A comedy-drama that unfolds over the course of a single night, exposing the fragility of different social classes. Two middle-aged friends reunited after years of hardship stumble upon Tarek, a wealthy young man unconscious after a fight, and impulsively decide to kidnap him for ransom. What begins as an amateur crime spirals into a chaotic and absurd situation.",
+    "poster": "/uploads/posters/vox-shish-dou.jpg",
+    "genre": [
+      "Comedy"
+    ],
+    "duration": "TBA",
+    "rating": "18TC",
+    "releaseDate": "2026-09-24",
+    "status": "coming-soon",
+    "language": "Arabic",
+    "director": null,
+    "cast": [
+      "Bayyoumy Fouad",
+      "Bassem Samra"
+    ],
+    "trailerUrl": "https://www.youtube.com/watch?v=K69cgezvS5s",
+    "featured": false
+  },
+  {
+    "id": "verity",
+    "title": "Verity",
+    "description": "Adapted from Colleen Hoover's best-selling novel, this seductive psychological thriller follows renowned author Verity Crawford (Anne Hathaway) and Lowen Ashleigh (Dakota Johnson), a struggling writer who relocates to the remote Crawford estate to ghostwrite for Verity — and uncovers what appears to be Verity's chilling autobiographical notes.",
+    "poster": "/uploads/posters/vox-verity.jpg",
+    "genre": [
+      "Thriller"
+    ],
+    "duration": "TBA",
+    "rating": "18TC",
+    "releaseDate": "2026-10-01",
+    "status": "coming-soon",
+    "language": "English",
+    "director": null,
+    "cast": [
+      "Anne Hathaway",
+      "Dakota Johnson",
+      "Josh Hartnett"
+    ],
+    "trailerUrl": "https://www.youtube.com/watch?v=xdPMKhjMSFs",
+    "featured": false
+  },
+  {
+    "id": "the-dino-family",
+    "title": "The Dino Family",
+    "description": "Phil is an ordinary teenager whose life is overshadowed by personal failures and schoolyard teasing. Everything changes dramatically when he stumbles upon and accidentally opens a hidden portal to go back 65 million years.",
+    "poster": "/uploads/posters/vox-dino-family.jpg",
+    "genre": [
+      "Animation"
+    ],
+    "duration": "TBA",
+    "rating": "18TC",
+    "releaseDate": "2026-10-15",
+    "status": "coming-soon",
+    "language": "English",
+    "director": null,
+    "cast": [],
+    "trailerUrl": "https://www.youtube.com/watch?v=oSXyB8q-uEI",
+    "featured": false
+  },
+  {
+    "id": "whalefall",
+    "title": "Whalefall",
+    "description": "Follows a scuba diver who, while looking for his father's remains, is swallowed by an 80-foot, 60-ton sperm whale and has just one hour to get out before his oxygen runs out.",
+    "poster": "/uploads/posters/vox-whalefall.jpg",
+    "genre": [
+      "Thriller"
+    ],
+    "duration": "TBA",
+    "rating": "18TC",
+    "releaseDate": "2026-10-15",
+    "status": "coming-soon",
+    "language": "English",
+    "director": null,
+    "cast": [
+      "Elisabeth Shue",
+      "Josh Brolin"
+    ],
+    "trailerUrl": "https://www.youtube.com/watch?v=dlUjkIz5sdw",
+    "featured": false
+  },
+  {
+    "id": "sense-and-sensibility",
+    "title": "Sense and Sensibility",
+    "description": "Sense and Sensibility follows sisters Elinor and Marianne Dashwood as they navigate love, heartbreak and societal expectations after their family loses its estate. Despite their contrasting approaches to romance, their unbreakable bond carries them through loss and upheaval.",
+    "poster": "/uploads/posters/vox-sense.jpg",
+    "genre": [
+      "Drama"
+    ],
+    "duration": "TBA",
+    "rating": "18TC",
+    "releaseDate": "2026-10-15",
+    "status": "coming-soon",
+    "language": "English",
+    "director": null,
+    "cast": [
+      "Daisy Edgar-Jones",
+      "Caitriona Balfe"
+    ],
+    "trailerUrl": "https://www.youtube.com/watch?v=qc7vdHjVkLY",
+    "featured": false
+  },
+  {
+    "id": "klara-and-the-sun",
+    "title": "Klara and the Sun",
+    "description": "Based on the bestselling novel from Nobel Prize-winner Kazuo Ishiguro: Klara (Jenna Ortega), an Artificial Friend who wants nothing more than to find the perfect home. When Klara meets Josie, each immediately senses a kindred spirit in the other — and Klara's innocent wonder begins to heal the family.",
+    "poster": "/uploads/posters/vox-klara.jpg",
+    "genre": [
+      "Sci-Fi"
+    ],
+    "duration": "TBA",
+    "rating": "18TC",
+    "releaseDate": "2026-10-22",
+    "status": "coming-soon",
+    "language": "English",
+    "director": "Ben Taylor",
+    "cast": [
+      "Jenna Ortega",
+      "Amy Adams"
+    ],
+    "trailerUrl": "https://www.youtube.com/watch?v=wixzainceAE",
+    "featured": false
+  },
+  {
+    "id": "bts-world-tour-arirang-in-buenos-aires-live",
+    "title": "BTS World Tour 'Arirang' in Buenos Aires: Live",
+    "description": "The first-ever BTS Live Viewing broadcast from South America. Experience the BTS World Tour 'Arirang' in cinemas worldwide, broadcasting from Buenos Aires, Argentina — the first time the band has ever performed in Argentina.",
+    "poster": "/uploads/posters/vox-bts-ba.jpg",
+    "genre": [
+      "Documentary"
+    ],
+    "duration": "TBA",
+    "rating": "18TC",
+    "releaseDate": "2026-10-25",
+    "status": "coming-soon",
+    "language": "English",
+    "director": null,
+    "cast": [],
+    "trailerUrl": "https://www.youtube.com/watch?v=519rQlg1hRw",
+    "featured": false
+  },
+  {
+    "id": "the-mongoose",
+    "title": "The Mongoose",
+    "description": "Accused of a crime he didn't commit and with nothing to lose, a war hero (Liam Neeson) leads law enforcement on a cross-country car chase with the help of his brothers in arms and a sympathetic public rooting for his getaway.",
+    "poster": "/uploads/posters/vox-mongoose.jpg",
+    "genre": [
+      "Action"
+    ],
+    "duration": "TBA",
+    "rating": "18TC",
+    "releaseDate": "2026-10-29",
+    "status": "coming-soon",
+    "language": "English",
+    "director": null,
+    "cast": [
+      "Liam Neeson",
+      "Marisa Tomei",
+      "Ving Rhames"
+    ],
+    "trailerUrl": "https://www.youtube.com/watch?v=Gt935z2RdWU",
+    "featured": false
+  },
+  {
+    "id": "bts-world-tour-arirang-in-sao-paulo-live",
+    "title": "BTS World Tour 'Arirang' in Sao Paulo: Live",
+    "description": "Experience the BTS World Tour 'Arirang' in cinemas worldwide, broadcasting from Sao Paulo, Brazil — the grand finale of their Latin America tour, bringing the explosive energy of the packed stadium straight to the big screen.",
+    "poster": "/uploads/posters/vox-bts-sp.jpg",
+    "genre": [
+      "Documentary"
+    ],
+    "duration": "TBA",
+    "rating": "18TC",
+    "releaseDate": "2026-10-31",
+    "status": "coming-soon",
+    "language": "English",
+    "director": null,
+    "cast": [],
+    "trailerUrl": "https://www.youtube.com/watch?v=519rQlg1hRw",
+    "featured": false
+  },
+  {
+    "id": "the-cat-in-the-hat",
+    "title": "The Cat In The Hat",
+    "description": "In the wonderfully whimsical tradition of Dr. Seuss, The Cat in the Hat comes to the big screen in his animated theatrical feature film debut — an all-new, epic adventure with an edge, where mischief, magic and mayhem reign supreme.",
+    "poster": "/uploads/posters/vox-cat-hat.jpg",
+    "genre": [
+      "Animation"
+    ],
+    "duration": "TBA",
+    "rating": "18TC",
+    "releaseDate": "2026-11-05",
+    "status": "coming-soon",
+    "language": "English",
+    "director": null,
+    "cast": [
+      "Bill Hader",
+      "Xochitl Gomez"
+    ],
+    "trailerUrl": "https://www.youtube.com/watch?v=jz8pLlPhSeY",
+    "featured": false
+  },
+  {
+    "id": "godzilla-minus-zero",
+    "title": "Godzilla Minus Zero",
+    "description": "War reduced Japan to zero, and Godzilla plunged it into minus. Two years have passed since then, and the country has faced agonizing struggles to achieve recovery and finally reclaim its daily life.",
+    "poster": "/uploads/posters/vox-godzilla.jpg",
+    "genre": [
+      "Action"
+    ],
+    "duration": "TBA",
+    "rating": "18TC",
+    "releaseDate": "2026-11-05",
+    "status": "coming-soon",
+    "language": "Japanese",
+    "director": null,
+    "cast": [
+      "Minami Hamabe",
+      "Ryunosuke Kamiki"
+    ],
+    "trailerUrl": "https://www.youtube.com/watch?v=0zrIMIcsT0k",
+    "featured": false
+  },
+  {
+    "id": "wala-kan-ala-el-bal",
+    "title": "Wala Kan Ala El-Bal",
+    "description": "A young tour guide in Luxor accepts an unusual deal from a wealthy businessman: win over his daughter and help her forget her ex. But when things don't go quite as planned, Hassan finds himself caught in a comical series of unexpected situations — and a love story he never saw coming.",
+    "poster": "/uploads/posters/vox-wala-kan.jpg",
+    "genre": [
+      "Comedy"
+    ],
+    "duration": "TBA",
+    "rating": "18TC",
+    "releaseDate": "2026-11-12",
+    "status": "coming-soon",
+    "language": "Arabic",
+    "director": null,
+    "cast": [
+      "Nour El Nabawy",
+      "Ashraf Abdel Baky"
+    ],
+    "trailerUrl": null,
+    "featured": false
+  },
+  {
+    "id": "hexed",
+    "title": "Hexed",
+    "description": "An awkward teen and her Type-A mother learn her peculiarities might be magical powers, transforming their lives and revealing a hidden magical realm.",
+    "poster": "/uploads/posters/vox-hexed.jpg",
+    "genre": [
+      "Animation"
+    ],
+    "duration": "TBA",
+    "rating": "18TC",
+    "releaseDate": "2026-11-26",
+    "status": "coming-soon",
+    "language": "English",
+    "director": null,
+    "cast": [
+      "Rashida Jones",
+      "Hailee Steinfeld",
+      "Stephen Fry"
+    ],
+    "trailerUrl": "https://www.youtube.com/watch?v=5iyoBI4Afx0",
+    "featured": false
+  },
+  {
+    "id": "violent-night-2",
+    "title": "Violent Night 2",
+    "description": "If you're nice, you get presents from the Big Guy. If you're naughty, you get justice. When Santa forgets the true meaning of Christmas, he finds himself in the heart of a lively mall community in desperate need of his help — and must call in reinforcements from the one person no baddie wants to tangle with: Mrs. Claus.",
+    "poster": "/uploads/posters/vox-violent-night-2.jpg",
+    "genre": [
+      "Action"
+    ],
+    "duration": "TBA",
+    "rating": "18TC",
+    "releaseDate": "2026-12-04",
+    "status": "coming-soon",
+    "language": "English",
+    "director": "Toby Harland",
+    "cast": [],
+    "trailerUrl": "https://www.youtube.com/watch?v=FmM2giDwLAE",
+    "featured": false
+  },
+  {
+    "id": "avengers-doomsday",
+    "title": "Avengers: Doomsday",
+    "description": "Heroes from three different worlds must unite when they're thrust together to confront a catastrophic danger that could destroy everything they know.",
+    "poster": "/uploads/posters/vox-doomsday.jpg",
+    "genre": [
+      "Action"
+    ],
+    "duration": "TBA",
+    "rating": "18TC",
+    "releaseDate": "2026-12-16",
+    "status": "coming-soon",
+    "language": "English",
+    "director": "Anthony and Joe Russo",
+    "cast": [
+      "Chris Hemsworth",
+      "Robert Downey Jr",
+      "Chris Evans",
+      "Pedro Pascal"
+    ],
+    "trailerUrl": "https://www.youtube.com/watch?v=irVNGjRFZGk",
+    "featured": false
+  },
+  {
+    "id": "children-of-blood-and-bone",
+    "title": "Children of Blood and Bone",
+    "description": "In the epic fantasy world of Orisha, a young woman goes on a quest to reclaim the magic that was violently stolen from her people. Directed by Gina Prince-Bythewood.",
+    "poster": "/uploads/posters/vox-children-blood-bone.jpg",
+    "genre": [
+      "Adventure"
+    ],
+    "duration": "TBA",
+    "rating": "18TC",
+    "releaseDate": "2027-01-14",
+    "status": "coming-soon",
+    "language": "English",
+    "director": "Gina Prince-Bythewood",
+    "cast": [
+      "Thuso Mbedu",
+      "Damson Idris",
+      "Amandla Stenberg",
+      "Viola Davis",
+      "Idris Elba"
+    ],
+    "trailerUrl": "https://www.youtube.com/watch?v=4QYESVJkyuc",
+    "featured": false
+  }
+]
